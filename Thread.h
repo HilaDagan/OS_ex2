@@ -1,12 +1,21 @@
-//
-// Created by dan.kovalsky on 4/25/18.
-//
+// Thread.h
 
 #ifndef UNTITLED_THREAD_H
 #define UNTITLED_THREAD_H
-
-
 #include <vector>
+
+
+/**
+ * @brief Represent the possible states of a thread.
+ */
+typedef enum ThreadState
+{
+    READY,
+    RUNNING,
+    BLOCKED,
+    SYNCED,
+} ThreadState;
+
 
 class Thread {
 public:
@@ -22,12 +31,10 @@ public:
      */
     ~Thread();
 
-    static unsigned int curRunningId; //The thread ID of the current running thread;
-
     /**
      * Set the state of the thread
      */
-    void setState(unsigned int newState);
+    void setState(ThreadState newState);
 
     /**
      * Return The state of this.
@@ -41,15 +48,14 @@ public:
      */
     unsigned int getId() const;
 
-private:
+    static unsigned int curRunningId; //The thread ID of the current running thread;
 
+
+private:
     unsigned int _id;        // the id
     unsigned int _state;     //[RUN,READY,BLOCK,SYNC]
-//    void _function;
+//    void _function; //todo
     std::vector<unsigned int> _synced; // contains the id of all the threads that wait for this thread to terminate.
-
-
-
 };
 
 

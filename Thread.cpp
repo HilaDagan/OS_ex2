@@ -1,10 +1,11 @@
-
+// Thread.cpp
 
 #include "Thread.h"
 
 
 Thread::Thread(unsigned int id, void (*f)(void)) {
     _id = id;
+    _state = READY;
 //    _function = f;
 
 }
@@ -13,14 +14,26 @@ Thread::~Thread() {
 
 }
 
-void Thread::setState(unsigned int newState) {
 
+/**
+ * Set the state of the thread
+ */
+void Thread::setState(ThreadState newState) {
+    _state = newState;
 }
 
+/**
+ * Return The state of this.
+ * @return The state of this
+ */
 unsigned int Thread::getState() const {
-    return 0;
+    return _state;
 }
 
+/**
+ * Return The id of this.
+ * @return The id of this
+ */
 unsigned int Thread::getId() const {
-    return 0;
+    return _id;
 }

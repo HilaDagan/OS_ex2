@@ -1,7 +1,6 @@
 // uthread.h
 /*
  * User-Level Threads Library (uthreads)
- * Author: OS, os@cs.huji.ac.il
  */
 
 #include "uthreads.h"

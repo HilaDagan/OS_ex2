@@ -11,8 +11,7 @@
 
 static std::map<int, Thread> threadsDic; // contain all the existing threads.
 static std::vector<int> blockedThreads; // contain all threads id that are currently blocked.
-static std::vector<int> syncedThreads; // contain all threads id that are currently synced.
-static std::queue<int> readyThreads; // contain all threads id that are currently ready to run.
+static std::vector<int> readyThreads; // contain all threads id that are currently ready to run.
 
 
 /*

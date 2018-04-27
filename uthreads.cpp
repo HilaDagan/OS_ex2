@@ -13,15 +13,15 @@
 /* Containers */
 static std::map<int, Thread> threadsDic; // contain all the existing threads.// todo - include the main?
 // the current number of threads in the size of the dic + 1 (for the main thread)
-static std::vector<unsigned int> blockedThreads; // contain all threads id that are currently
+static std::vector<int> blockedThreads; // contain all threads id that are currently
 // blocked.
-static std::vector<unsigned int> readyThreads; // contain all threads id that are currently ready
+static std::vector<int> readyThreads; // contain all threads id that are currently ready
 // to run.
 
 
 static std::vector<unsigned int> unusedId; // threads id that are unused.
 static unsigned int idCounter; // the first unused id.
-static unsigned int quantum;  // the length of a quantum in micro-seconds.
+static int quantum;  // the length of a quantum in micro-seconds.
 static const int FAILURE = -1;
 
 
@@ -78,7 +78,7 @@ unsigned int findId()
  * On failure, return -1.
 */
 int uthread_spawn(void (*f)(void)){
-    unsigned int newId;
+    int newId;
 
     if (threadsDic.size() == MAX_THREAD_NUM){
         return FAILURE;
@@ -88,6 +88,27 @@ int uthread_spawn(void (*f)(void)){
     threadsDic[newId] = newThread;
     readyThreads.push_back(newId); // add the new thread to the end of the READY threads list.
     return newId;
+}
+
+/*
+ * Remove the given terminated thread from the dependencies lists of other threads.
+ */
+void removeFromDependencyList(const Thread deadThread, const int id)
+{
+    // If the dead thread was dependent in other thread, remove it from the dependency list
+    // of that thread:
+    if (deadThread.getDependentIn() != nullptr) {
+        threadsDic[deadThread.getDependentIn()].removeDependentThread(id);
+    }
+
+    // If there are threads that are dependent in the given dead thread,
+    // remove it and change their state to READY.
+    std::vector<int> vec = deadThread.getDependenciesList();
+    for (int i = 0; i < vec.size(); ++i)
+    {
+        threadsDic[vec[i]].resetDependentIn();
+        readyThreads.push_back(vec[0]);
+    }
 }
 
 
@@ -116,17 +137,16 @@ int uthread_terminate(int tid){ //todo
 
     Thread threadToTerminate = threadsDic[tid];
     ThreadState tstate = threadToTerminate.getState();
-    if (tstate == READY)
-    { // removes from the READY threads list.
+    if (tstate == READY) { // removes from the READY threads list.
         readyThreads.erase(remove(readyThreads.begin(), readyThreads.end(), tid),
                            readyThreads.end());
-    } else if (tstate == BLOCKED)
-    {
+
+    } else if (tstate == BLOCKED) {  // removes from the BLOCKED threads list.
         blockedThreads.erase(remove(blockedThreads.begin(), blockedThreads.end(), tid),
                              blockedThreads.end());
     }
 
-    removeFromDependencyList(tid);
+    removeFromDependencyList(threadToTerminate, tid);
     threadsDic.erase(tid);
     return 0;
 }
@@ -142,7 +162,25 @@ int uthread_terminate(int tid){ //todo
  * effect and is not considered as an error.
  * Return value: On success, return 0. On failure, return -1.
 */
-int uthread_block(int tid);//todo
+int uthread_block(int tid) {
+    // no thread with ID tid exist or trying to block the main thread:
+    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+        return FAILURE;
+    }
+    if (Thread::curRunningId == tid) {  // a thread blocks itself
+        // todo - a scheduling decision should be made.
+    }
+    if (threadsDic[tid].getState() == READY) {
+        readyThreads.erase(remove(readyThreads.begin(), readyThreads.end(), tid),
+                           readyThreads.end());
+    }
+    if (threadsDic[tid].getState() != BLOCKED and threadsDic[tid].getState() != SYNCED)
+    {
+        threadsDic[tid].setState(BLOCKED);
+        blockedThreads.push_back(tid);
+    }
+    return 0;
+}
 
 
 /*
@@ -152,8 +190,18 @@ int uthread_block(int tid);//todo
  * ID tid exists it is considered as an error.
  * Return value: On success, return 0. On failure, return -1.
 */
-int uthread_resume(int tid);//todo
-
+int uthread_resume(int tid)
+{
+    // no thread with ID tid exist or trying to block the main thread:
+    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+        return FAILURE;
+    }
+    if (threadsDic[tid].getState() != RUNNING and threadsDic[tid].getState() != READY){
+        threadsDic[tid].setState(READY);
+        readyThreads.push_back(tid);
+    }
+    return 0;
+}
 
 
 /*
@@ -163,7 +211,20 @@ int uthread_resume(int tid);//todo
  * RUNNING thread transitions to the BLOCKED state a scheduling decision should be made.
  * Return value: On success, return 0. On failure, return -1.
 */
-int uthread_sync(int tid); //todo
+int uthread_sync(int tid){
+    // no thread with ID tid exist or trying to sync the main thread:
+    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+        return FAILURE;
+    }
+
+    Thread curThread = threadsDic[Thread::curRunningId];
+    curThread.setState(SYNCED);
+    curThread.setDependentIn(tid); // the current thread is dependent on tid.
+
+    threadsDic[tid].addToDependenciesList(Thread::curRunningId); // add this thread to the list.
+    //todo -  a scheduling decision should be made. here? or outside this function?
+    return 0;
+}
 
 
 /*

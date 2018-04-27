@@ -5,13 +5,24 @@
 
 #include "uthreads.h"
 #include "Thread.cpp"
+#include <vector>
+#include <algorithm> // todo - is ok?
+#include <map>
 
 
 /* Containers */
+static std::map<int, Thread> threadsDic; // contain all the existing threads.// todo - include the main?
+// the current number of threads in the size of the dic + 1 (for the main thread)
+static std::vector<unsigned int> blockedThreads; // contain all threads id that are currently
+// blocked.
+static std::vector<unsigned int> readyThreads; // contain all threads id that are currently ready
+// to run.
 
-static std::map<int, Thread> threadsDic; // contain all the existing threads.
-static std::vector<int> blockedThreads; // contain all threads id that are currently blocked.
-static std::vector<int> readyThreads; // contain all threads id that are currently ready to run.
+
+static std::vector<unsigned int> unusedId; // threads id that are unused.
+static unsigned int idCounter; // the first unused id.
+static unsigned int quantum;  // the length of a quantum in micro-seconds.
+static const int FAILURE = -1;
 
 
 /*
@@ -22,12 +33,37 @@ static std::vector<int> readyThreads; // contain all threads id that are current
  * function with non-positive quantum_usecs.
  * Return value: On success, return 0. On failure, return -1.
 */
-int uthread_init(int quantum_usecs){//todo
-    if (quantum_usecs < 0)
+int uthread_init(int quantum_usecs){
+    if (quantum_usecs <= 0)
     {
-        return -1;
+        return FAILURE;
     }
+    quantum = (unsigned int) quantum_usecs;
+    Thread::curRunningId = 0; // the main thread.
+    //todo - should we add it to the dic?
+    idCounter = 1; // 0 is used by the main thread.
     return 0;
+}
+
+
+/*
+ * Description: This function finds the samllest non-negative integer not already
+ * taken by an existing thread.
+ */
+unsigned int findId()
+{
+    unsigned int newId;
+    std::vector<unsigned int>::iterator minId = std::min_element(std::begin(unusedId),
+                                                                 std::end(unusedId));
+    if (idCounter < *minId)
+    {
+        newId = idCounter;
+        idCounter++;
+    } else {
+        newId = *minId;
+        unusedId.erase(minId);
+    }
+    return newId;
 }
 
 
@@ -37,18 +73,20 @@ int uthread_init(int quantum_usecs){//todo
  * of the READY threads list. The uthread_spawn function should fail if it
  * would cause the number of concurrent threads to exceed the limit
  * (MAX_THREAD_NUM). Each thread should be allocated with a stack of size
- * STACK_SIZE bytes. //todo - to add a field of static stack array?
+ * STACK_SIZE bytes.
  * Return value: On success, return the ID of the created thread.
  * On failure, return -1.
 */
 int uthread_spawn(void (*f)(void)){
-    if (len(threadsDic) == MAX_THREAD_NUM){
-        return -1;
+    unsigned int newId;
+
+    if (threadsDic.size() == MAX_THREAD_NUM){
+        return FAILURE;
     }
     newId = findId();
-    newThread = Thread(newId, f);
+    Thread newThread = Thread(newId, f, STACK_SIZE);
     threadsDic[newId] = newThread;
-    readyThreads.push(newId);
+    readyThreads.push_back(newId); // add the new thread to the end of the READY threads list.
     return newId;
 }
 
@@ -64,7 +102,35 @@ int uthread_spawn(void (*f)(void)){
  * terminated and -1 otherwise. If a thread terminates itself or the main
  * thread is terminated, the function does not return.
 */
-int uthread_terminate(int tid);//todo
+int uthread_terminate(int tid){ //todo
+    if (tid == 0) { // terminating the main thread
+        //todo releasing the assigned library memory
+        exit(0);
+    }
+    if (tid == Thread::curRunningId) {  // a thread terminates itself
+        //todo - not return
+    }
+    if (threadsDic.find(tid) == threadsDic.end()) { // no thread with ID tid exist
+        return FAILURE;
+    }
+
+    Thread threadToTerminate = threadsDic[tid];
+    ThreadState tstate = threadToTerminate.getState();
+    if (tstate == READY)
+    { // removes from the READY threads list.
+        readyThreads.erase(remove(readyThreads.begin(), readyThreads.end(), tid),
+                           readyThreads.end());
+    } else if (tstate == BLOCKED)
+    {
+        blockedThreads.erase(remove(blockedThreads.begin(), blockedThreads.end(), tid),
+                             blockedThreads.end());
+    }
+
+    removeFromDependencyList(tid);
+    threadsDic.erase(tid);
+    return 0;
+}
+
 
 
 /*
@@ -89,16 +155,12 @@ int uthread_block(int tid);//todo
 int uthread_resume(int tid);//todo
 
 
+
 /*
  * Description: This function blocks the RUNNING thread until thread with
- * ID tid will move to RUNNING state (i.e.right after the next time that
- * thread tid will stop running, the calling thread will be resumed
- * automatically). If thread with ID tid will be terminated before RUNNING
- * again, the calling thread should move to READY state right after thread
- * tid is terminated (i.e. it won’t be blocked forever). It is considered
- * as an error if no thread with ID tid exists or if the main thread (tid==0)
- * calls this function. Immediately after the RUNNING thread transitions to
- * the BLOCKED state a scheduling decision should be made.
+ * ID tid will terminate. It is considered an error if no thread with ID tid
+ * exists or if the main thread (tid==0) calls this function. Immediately after the
+ * RUNNING thread transitions to the BLOCKED state a scheduling decision should be made.
  * Return value: On success, return 0. On failure, return -1.
 */
 int uthread_sync(int tid); //todo

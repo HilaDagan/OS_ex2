@@ -24,7 +24,7 @@ public:
      * @param id the given id.
      * @param f the entry point of this.
      */
-    Thread(unsigned int id, void (*f)(void));
+    Thread(unsigned int id, void (*f)(void), unsigned int stackSize);
 
     /**
      * Free all the allocated memory.
@@ -40,7 +40,7 @@ public:
      * Return The state of this.
      * @return The state of this
      */
-    unsigned int getState() const;
+    ThreadState getState() const;
 
     /**
      * Return The id of this.
@@ -53,9 +53,14 @@ public:
 
 private:
     unsigned int _id;        // the id
-    unsigned int _state;     //[RUN,READY,BLOCK,SYNC]
+    ThreadState _state;     //[RUN,READY,BLOCK,SYNC]
+    std::vector<int> _stack;
+
 //    void _function; //todo
-    std::vector<unsigned int> _synced; // contains the id of all the threads that wait for this thread to terminate.
+    std::vector<unsigned int> _dependenciesInThis; // contains the id of all the threads that wait
+    // for this thread to terminate.
+    std::vector<unsigned int> _thisDependentIn; // contains the id of all the threads that this
+    // thread is dependent of.
 };
 
 

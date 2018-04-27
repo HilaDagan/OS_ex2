@@ -135,5 +135,4 @@ int uthread_get_total_quantums();//todo
 */
 int uthread_get_quantums(int tid);//todo
 
-#endif
 

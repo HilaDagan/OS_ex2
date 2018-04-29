@@ -4,7 +4,12 @@
 #define UNTITLED_THREAD_H
 #include <vector>
 #include <list>
-
+#include "uthreads.h"
+#include <cstdio>
+#include <csetjmp>
+#include <csignal>
+#include <unistd.h>
+#include <sys/time.h>
 
 /**
  * @brief Represent the possible states of a thread.
@@ -23,6 +28,52 @@ typedef enum ThreadState
 const static int NOT_DEPENDENT = -1;
 
 
+//======================= Definition of address_t =======================//
+
+#ifdef __x86_64__
+/* code for 64 bit Intel arch */
+
+typedef unsigned long address_t;
+#define JB_SP 6
+#define JB_PC 7
+
+/* A translation is required when using an address of a variable.
+   Use this as a black box in your code. */
+address_t translate_address(address_t addr)
+{
+    address_t ret;
+    asm volatile("xor    %%fs:0x30,%0\n"
+            "rol    $0x11,%0\n"
+    : "=g" (ret)
+    : "0" (addr));
+    return ret;
+}
+
+#else
+/* code for 32 bit Intel arch */
+
+typedef unsigned int address_t;
+#define JB_SP 4
+#define JB_PC 5
+
+/* A translation is required when using an address of a variable.
+   Use this as a black box in your code. */
+address_t translate_address(address_t addr)
+{
+    address_t ret;
+    asm volatile("xor    %%gs:0x18,%0\n"
+		"rol    $0x9,%0\n"
+                 : "=g" (ret)
+                 : "0" (addr));
+    return ret;
+}
+
+#endif
+
+// ======================= end of definition =======================//
+
+
+
 class Thread {
 public:
 
@@ -31,9 +82,7 @@ public:
      * @param id the given id.
      * @param f the entry point of this.
      */
-    Thread(int id, void (*f)(void), int stackSize);
-
-
+    Thread(int id, void (*f)(void));
 
 
     /**
@@ -88,17 +137,44 @@ public:
      */
     void setDependentIn(int _dependentIn);
 
+    /**
+     * @return the number of quantums that 'this' was in RUNNING state.
+     */
+    int getQuantums() const;
+
+    /**
+     * Increase the number of quantums that 'this' was in RUNNING state.
+     */
+    void increasQuantums();
+
     static int curRunningId; //The thread ID of the current running thread;
 
 
 private:
-    int _id;  // the id
-    ThreadState _state;  //[RUN,READY,BLOCK,SYNC]
-    std::vector<int> _stack;
-    std::list<int> _dependenciesList;  // contains the id of all the threads that wait
+    int _id;  // the thread id
+
+    ThreadState _state;  // one of: [RUN,READY,BLOCK,SYNC]
+
+    char _stack[STACK_SIZE];
+
+    // contains the id of all the threads that wait
     // for this thread to terminate.
+    std::list<int> _dependenciesList;
+
     int _dependentIn;  // contains the thread id (if exist) that this thread is dependent of.
+
     void (*_function)(void);
+
+    address_t _sp, _pc;
+
+    int _quantumsNum;  // the number of quantums that 'this' was in RUNNING state.
+
+    sigjmp_buf _env;
+
+    /**
+     * Setup the stack environment of the thread.
+     */
+    void setupEnv();
 };
 
 

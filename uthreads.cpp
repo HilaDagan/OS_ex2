@@ -1,17 +1,20 @@
 // uthread.h
 /*
  * User-Level Threads Library (uthreads)
- */ //check
+ */
 
 #include "uthreads.h"
 #include "Thread.cpp"
+#include <stdio.h>
+#include <signal.h>
+#include <sys/time.h>
 #include <vector>
 #include <algorithm> // todo - is ok?
 #include <map>
 
 
 /* Containers */
-static std::map<int, Thread> threadsDic; // contain all the existing threads.// todo - include the main?
+static std::map<int, Thread*> threadsDic; // contain all the existing threads.// todo - include the main?
 // the current number of threads in the size of the dic + 1 (for the main thread)
 static std::list<int> blockedThreads; // contain all threads id that are currently
 // blocked.
@@ -21,10 +24,12 @@ static std::list<int> readyThreads; // contain all threads id that are currently
 
 static std::vector<int> unusedId; // threads id that are unused.
 static int idCounter; // the first unused id.
-static int quantum;  // the length of a quantum in micro-seconds.
+//static int quantum;  // the length of a quantum in micro-seconds.
+static int totalQuantum;  // the number of a quantums that were started since the library
+// was initialized.
 static const int MAIN_THREAD_ID = 0;
 static const int FAILURE = -1;
-
+int timerExpired = 0; // if the value is 1, the quantum is over.
 
 /*
  * Description: This function initializes the thread library.
@@ -39,10 +44,13 @@ int uthread_init(int quantum_usecs){
     {
         return FAILURE;
     }
-    quantum = quantum_usecs;
-    Thread::curRunningId = 0; // the main thread.
+//    quantum = quantum_usecs;
+    totalQuantum = 1;  // only the current quantum.
+    Thread::curRunningId = 0;  // the main thread.
     //todo - should we add it to the dic?
-    idCounter = 1; // 0 is used by the main thread.
+    idCounter = 0;  // 0 is used by the main thread.
+    uthread_spawn(nullptr); // create the main thread.
+    scheduler(quantum_usecs);
     return 0;
 }
 
@@ -85,7 +93,7 @@ int uthread_spawn(void (*f)(void)){
         return FAILURE;
     }
     newId = findId();
-    Thread newThread(newId, f, STACK_SIZE);
+    Thread *newThread = new Thread(newId, f);
     threadsDic[newId] = newThread;
     readyThreads.push_back(newId); // add the new thread to the end of the READY threads list.
     return newId;
@@ -94,21 +102,22 @@ int uthread_spawn(void (*f)(void)){
 /*
  * Remove the given terminated thread from the dependencies lists of other threads.
  */
-void removeFromDependencyList(const Thread deadThread, const int id)
+void removeFromDependencyList(const Thread *deadThread, const int id)
 {
     // If the dead thread was dependent in other thread, remove it from the dependency list
     // of that thread:
-    if (deadThread.getDependentIn() != NOT_DEPENDENT) {
-        threadsDic[deadThread.getDependentIn()].removeDependentThread(id);
+    if (deadThread->getDependentIn() != NOT_DEPENDENT) {
+        threadsDic[deadThread->getDependentIn()]->removeDependentThread(id);
     }
 
     // If there are threads that are dependent in the given dead thread,
     // remove it and change their state to READY.
-    std::list<int> depList = deadThread.getDependenciesList();
+    std::list<int> depList = deadThread->getDependenciesList();
     std::list<int>::iterator it;
     for (it = depList.begin(); it != depList.end(); ++it)
     {
-        threadsDic[*it].resetDependentIn();
+        threadsDic[*it]->resetDependentIn();
+        threadsDic[*it]->setState(READY);
         readyThreads.push_back(*it);
     }
 }
@@ -137,8 +146,8 @@ int uthread_terminate(int tid){ //todo
         return FAILURE;
     }
 
-    Thread threadToTerminate = threadsDic[tid];
-    ThreadState tstate = threadToTerminate.getState();
+    Thread *threadToTerminate = threadsDic[tid];
+    ThreadState tstate = threadToTerminate->getState();
     if (tstate == READY) { // removes from the READY threads list.
         readyThreads.remove(tid);
 
@@ -147,10 +156,10 @@ int uthread_terminate(int tid){ //todo
     }
 
     removeFromDependencyList(threadToTerminate, tid);
+    delete threadsDic[tid]; //todo - the order is fine?
     threadsDic.erase(tid);
     return 0;
 }
-
 
 
 /*
@@ -170,13 +179,13 @@ int uthread_block(int tid) {
     if (Thread::curRunningId == tid) {  // a thread blocks itself
         // todo - a scheduling decision should be made.
     }
-    if (threadsDic[tid].getState() == READY) {
+    if (threadsDic[tid]->getState() == READY) {
         readyThreads.erase(remove(readyThreads.begin(), readyThreads.end(), tid),
                            readyThreads.end());
     }
-    if (threadsDic[tid].getState() != BLOCKED and threadsDic[tid].getState() != SYNCED)
+    if (threadsDic[tid]->getState() != BLOCKED and threadsDic[tid]->getState() != SYNCED)
     {
-        threadsDic[tid].setState(BLOCKED);
+        threadsDic[tid]->setState(BLOCKED);
         blockedThreads.push_back(tid);
     }
     return 0;
@@ -196,8 +205,8 @@ int uthread_resume(int tid)
     if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
         return FAILURE;
     }
-    if (threadsDic[tid].getState() != RUNNING and threadsDic[tid].getState() != READY){
-        threadsDic[tid].setState(READY);
+    if (threadsDic[tid]->getState() != RUNNING and threadsDic[tid]->getState() != READY){
+        threadsDic[tid]->setState(READY);
         readyThreads.push_back(tid);
     }
     return 0;
@@ -217,11 +226,11 @@ int uthread_sync(int tid){
         return FAILURE;
     }
 
-    Thread curThread = threadsDic[Thread::curRunningId];
-    curThread.setState(SYNCED);
-    curThread.setDependentIn(tid); // the current thread is dependent on tid.
+    Thread *curThread = threadsDic[Thread::curRunningId];
+    curThread->setState(SYNCED);
+    curThread->setDependentIn(tid); // the current thread is dependent on tid.
 
-    threadsDic[tid].addToDependenciesList(Thread::curRunningId); // add this thread to the list.
+    threadsDic[tid]->addToDependenciesList(Thread::curRunningId); // add this thread to the list.
     //todo -  a scheduling decision should be made. here? or outside this function?
     return 0;
 }
@@ -244,7 +253,9 @@ int uthread_get_tid(){
  * should be increased by 1.
  * Return value: The total number of quantums.
 */
-int uthread_get_total_quantums();//todo
+int uthread_get_total_quantums(){
+    return totalQuantum;
+}
 
 
 /*
@@ -256,6 +267,96 @@ int uthread_get_total_quantums();//todo
  * thread with ID tid exists it is considered as an error.
  * Return value: On success, return the number of quantums of the thread with ID tid. On failure, return -1.
 */
-int uthread_get_quantums(int tid);//todo
+int uthread_get_quantums(int tid){
+    // no thread with ID tid exist or trying to sync the main thread:
+    if ((threadsDic.find(tid) == threadsDic.end())) {
+        return FAILURE;
+    }
+    if (tid == 0) {
+        return 1; // todo - is ok?? because it is not in the dict.
+    }
+    return threadsDic[tid]->getQuantums();
+}
 
 
+/*
+ * Handle SIGVTALRM.
+ */
+void switchThreads(int sig)
+{
+    timerExpired = 1;
+
+    static int currentThread = 0; //todo - from here
+
+    int ret_val = sigsetjmp(env[currentThread],1);
+    printf("SWITCH: ret_val=%d\n", ret_val);
+    if (ret_val == 1) {
+        return;
+    }
+    currentThread = 1 - currentThread;
+    siglongjmp(env[currentThread],1);
+}
+
+    //todo
+}
+
+
+void setupTimer(int quantum){
+    struct sigaction sa;
+    struct itimerval timer;
+
+    // Install switchThreads as the signal handler for SIGVTALRM.
+    sa.sa_handler = &switchThreads;
+    if (sigaction(SIGVTALRM, &sa, NULL) < 0) {
+        printf("sigaction error."); //todo
+    }
+
+    // Configure the timer to expire after 1 sec... */
+    timer.it_value.tv_sec = 0;		// first time interval, seconds part
+    timer.it_value.tv_usec = quantum;		// first time interval, microseconds part
+
+    // configure the timer to expire every 3 sec after that.
+    timer.it_interval.tv_sec = 0;	// following time intervals, seconds part
+    timer.it_interval.tv_usec = quantum;	// following time intervals, microseconds part //todo
+
+    // Start a virtual timer. It counts down whenever this process is executing.
+    // ITIMER_VIRTUAL decrements only when the process is executing,
+    // and delivers SIGVTALRM upon expiration.
+    if (setitimer (ITIMER_VIRTUAL, &timer, NULL)) {
+        printf("setitimer error.");
+    }
+}
+
+
+/**
+ * A function that implement the Round-Robin scheduling policy.
+ * The scheduler decides which thread to run when:
+ *    1. The library is initialized (run the main thread).
+ *    2. The RUNNING thread is preempted due to: terminate itself/ blocked/put into sync.
+ * The input to the function is the length of a quantum in micro-seconds.
+ */
+void scheduler(int quantum){
+
+
+    for(;;) {
+        if (timerExpired) {
+            printf("Got it!\n");
+            timerExpired = 0;
+        }
+    }
+
+
+    // Move the thread to the READY state and place it at
+    // the end of the list of READY threads.
+
+    // if its quantum expired:
+    thread->setState(READY);
+    readyThreads.push_back(tid);
+
+    // move the next thread in the list of READY threads to RUNNING state.
+    int nextId = readyThreads.front();
+    readyThreads.pop_front();
+    threadsDic[nextId]->setState(RUNNING);
+    Thread::curRunningId = nextId;
+    threadsDic[nextId]->increasQuantums();
+}

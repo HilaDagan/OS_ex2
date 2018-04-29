@@ -10,12 +10,13 @@
  * @param id the given id.
  * @param f the entry point of this.
  */
-Thread::Thread(int id, void (*f)(void), int stackSize) {
+Thread::Thread(int id, void (*f)(void)) {
     _id = id;
     _state = READY;
-    _stack.reserve(stackSize); // increase the vector capacity.
     _dependentIn = NOT_DEPENDENT;
+    _quantumsNum = 0;
     _function = f;
+    setupEnv();
 }
 
 /**
@@ -96,4 +97,29 @@ void Thread::setDependentIn(int _dependentIn)
     Thread::_dependentIn = _dependentIn;
 }
 
+/**
+ * @return the number of quantums that 'this' was in RUNNING state.
+ */
+int Thread::getQuantums() const {
+    return _quantumsNum;
+}
 
+
+/**
+ * Increase the number of quantums that 'this' was in RUNNING state.
+ */
+void Thread::increasQuantums(){
+    _quantumsNum++;
+}
+
+/**
+ * Setup the stack environment of the thread.
+ */
+void Thread::setupEnv() {
+    _sp = (address_t)_stack + STACK_SIZE - sizeof(address_t);
+    _pc = (address_t)*_function;
+    sigsetjmp(_env, 1);
+    (_env->__jmpbuf)[JB_SP] = translate_address(_sp);
+    (_env->__jmpbuf)[JB_PC] = translate_address(_pc);
+    sigemptyset(&_env->__saved_mask);
+}

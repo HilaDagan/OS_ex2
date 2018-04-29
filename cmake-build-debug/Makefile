@@ -177,6 +177,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+uthreads.o: uthreads.cpp.o
+
+.PHONY : uthreads.o
+
+# target to build an object file
+uthreads.cpp.o:
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads.cpp.o
+.PHONY : uthreads.cpp.o
+
+uthreads.i: uthreads.cpp.i
+
+.PHONY : uthreads.i
+
+# target to preprocess a source file
+uthreads.cpp.i:
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads.cpp.i
+.PHONY : uthreads.cpp.i
+
+uthreads.s: uthreads.cpp.s
+
+.PHONY : uthreads.s
+
+# target to generate assembly for a file
+uthreads.cpp.s:
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads.cpp.s
+.PHONY : uthreads.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +219,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... uthreads.o"
+	@echo "... uthreads.i"
+	@echo "... uthreads.s"
 .PHONY : help
 
 

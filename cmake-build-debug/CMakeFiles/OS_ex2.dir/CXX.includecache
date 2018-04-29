@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/Thread.cpp
+cstdio
+-
+Thread.h
+/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/Thread.h
+
+/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/Thread.h
+vector
+-
+list
+-
+
+/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/main.cpp
+iostream
+-
+

@@ -3,6 +3,7 @@
 #ifndef UNTITLED_THREAD_H
 #define UNTITLED_THREAD_H
 #include <vector>
+#include <list>
 
 
 /**
@@ -16,15 +17,24 @@ typedef enum ThreadState
     SYNCED
 } ThreadState;
 
+/**
+ * Used when this thread doesn't dependent on any other thread.
+ */
+const static int NOT_DEPENDENT = -1;
+
 
 class Thread {
 public:
+
     /**
      * Initialize the new thread
      * @param id the given id.
      * @param f the entry point of this.
      */
-    Thread(int id, void (*f)(void), unsigned int stackSize);
+    Thread(int id, void (*f)(void), int stackSize);
+
+
+
 
     /**
      * Free all the allocated memory.
@@ -56,7 +66,7 @@ public:
     /**
      * @return the thread id of all the threads that are depend on this thread.
      */
-    const std::vector<int> &getDependenciesList() const; // todo - what does it mean?
+    const std::list<int> &getDependenciesList() const; // todo - what does it mean?
 
     /**
     * Add a new thread id to the dependency list.
@@ -78,17 +88,17 @@ public:
      */
     void setDependentIn(int _dependentIn);
 
-    static unsigned int curRunningId; //The thread ID of the current running thread;
+    static int curRunningId; //The thread ID of the current running thread;
 
 
 private:
     int _id;  // the id
     ThreadState _state;  //[RUN,READY,BLOCK,SYNC]
     std::vector<int> _stack;
-    std::vector<int> _dependenciesList;  // contains the id of all the threads that wait
+    std::list<int> _dependenciesList;  // contains the id of all the threads that wait
     // for this thread to terminate.
     int _dependentIn;  // contains the thread id (if exist) that this thread is dependent of.
-    //  void _function; //todo
+    void (*_function)(void);
 };
 
 

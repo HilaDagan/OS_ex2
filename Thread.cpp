@@ -1,25 +1,27 @@
 // Thread.cpp
 
+#include <cstdio>
 #include "Thread.h"
+
+
 
 /**
  * Initialize the new thread
  * @param id the given id.
  * @param f the entry point of this.
  */
-Thread::Thread(int id, void (*f)(void), unsigned int stackSize) {
+Thread::Thread(int id, void (*f)(void), int stackSize) {
     _id = id;
     _state = READY;
     _stack.reserve(stackSize); // increase the vector capacity.
-    _dependentIn = nullptr;
+    _dependentIn = NOT_DEPENDENT;
     _function = f;
 }
 
 /**
  * Free all the allocated memory.
  */
-Thread::~Thread() {
-}
+Thread::~Thread() = default;
 
 
 /**
@@ -50,7 +52,7 @@ int Thread::getId() const {
  */
 void Thread::resetDependentIn()
 {
-    _dependentIn = nullptr;
+    _dependentIn = NOT_DEPENDENT;
 }
 
 /**
@@ -64,7 +66,7 @@ int Thread::getDependentIn() const
 /**
  * @return the thread id of all the threads that are depend on this thread.
  */
-const std::vector<int> &Thread::getDependenciesList() const
+const std::list<int> &Thread::getDependenciesList() const
 {
     return _dependenciesList;
 }
@@ -82,8 +84,7 @@ void Thread::addToDependenciesList(const int newId){
  * remove the given thread id from the dependencies list.
  */
 void Thread::removeDependentThread(int tid){ //todo - will it really change the vector?
-    _dependenciesList.erase(remove(_dependenciesList.begin(), _dependenciesList.end(), tid),
-                            _dependenciesList.end());
+    _dependenciesList.remove(tid);
 
 }
 
@@ -94,3 +95,5 @@ void Thread::setDependentIn(int _dependentIn)
 {
     Thread::_dependentIn = _dependentIn;
 }
+
+

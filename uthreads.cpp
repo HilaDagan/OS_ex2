@@ -13,15 +13,16 @@
 /* Containers */
 static std::map<int, Thread> threadsDic; // contain all the existing threads.// todo - include the main?
 // the current number of threads in the size of the dic + 1 (for the main thread)
-static std::vector<int> blockedThreads; // contain all threads id that are currently
+static std::list<int> blockedThreads; // contain all threads id that are currently
 // blocked.
-static std::vector<int> readyThreads; // contain all threads id that are currently ready
+static std::list<int> readyThreads; // contain all threads id that are currently ready
 // to run.
 
 
-static std::vector<unsigned int> unusedId; // threads id that are unused.
-static unsigned int idCounter; // the first unused id.
+static std::vector<int> unusedId; // threads id that are unused.
+static int idCounter; // the first unused id.
 static int quantum;  // the length of a quantum in micro-seconds.
+static const int MAIN_THREAD_ID = 0;
 static const int FAILURE = -1;
 
 
@@ -38,7 +39,7 @@ int uthread_init(int quantum_usecs){
     {
         return FAILURE;
     }
-    quantum = (unsigned int) quantum_usecs;
+    quantum = quantum_usecs;
     Thread::curRunningId = 0; // the main thread.
     //todo - should we add it to the dic?
     idCounter = 1; // 0 is used by the main thread.
@@ -50,10 +51,10 @@ int uthread_init(int quantum_usecs){
  * Description: This function finds the samllest non-negative integer not already
  * taken by an existing thread.
  */
-unsigned int findId()
+int findId()
 {
-    unsigned int newId;
-    std::vector<unsigned int>::iterator minId = std::min_element(std::begin(unusedId),
+    int newId;
+    std::vector<int>::iterator minId = std::min_element(std::begin(unusedId),
                                                                  std::end(unusedId));
     if (idCounter < *minId)
     {
@@ -84,7 +85,7 @@ int uthread_spawn(void (*f)(void)){
         return FAILURE;
     }
     newId = findId();
-    Thread newThread = Thread(newId, f, STACK_SIZE);
+    Thread newThread(newId, f, STACK_SIZE);
     threadsDic[newId] = newThread;
     readyThreads.push_back(newId); // add the new thread to the end of the READY threads list.
     return newId;
@@ -97,17 +98,18 @@ void removeFromDependencyList(const Thread deadThread, const int id)
 {
     // If the dead thread was dependent in other thread, remove it from the dependency list
     // of that thread:
-    if (deadThread.getDependentIn() != nullptr) {
+    if (deadThread.getDependentIn() != NOT_DEPENDENT) {
         threadsDic[deadThread.getDependentIn()].removeDependentThread(id);
     }
 
     // If there are threads that are dependent in the given dead thread,
     // remove it and change their state to READY.
-    std::vector<int> vec = deadThread.getDependenciesList();
-    for (int i = 0; i < vec.size(); ++i)
+    std::list<int> depList = deadThread.getDependenciesList();
+    std::list<int>::iterator it;
+    for (it = depList.begin(); it != depList.end(); ++it)
     {
-        threadsDic[vec[i]].resetDependentIn();
-        readyThreads.push_back(vec[0]);
+        threadsDic[*it].resetDependentIn();
+        readyThreads.push_back(*it);
     }
 }
 
@@ -124,7 +126,7 @@ void removeFromDependencyList(const Thread deadThread, const int id)
  * thread is terminated, the function does not return.
 */
 int uthread_terminate(int tid){ //todo
-    if (tid == 0) { // terminating the main thread
+    if (tid == MAIN_THREAD_ID) { // terminating the main thread
         //todo releasing the assigned library memory
         exit(0);
     }
@@ -138,12 +140,10 @@ int uthread_terminate(int tid){ //todo
     Thread threadToTerminate = threadsDic[tid];
     ThreadState tstate = threadToTerminate.getState();
     if (tstate == READY) { // removes from the READY threads list.
-        readyThreads.erase(remove(readyThreads.begin(), readyThreads.end(), tid),
-                           readyThreads.end());
+        readyThreads.remove(tid);
 
     } else if (tstate == BLOCKED) {  // removes from the BLOCKED threads list.
-        blockedThreads.erase(remove(blockedThreads.begin(), blockedThreads.end(), tid),
-                             blockedThreads.end());
+        blockedThreads.remove(tid);
     }
 
     removeFromDependencyList(threadToTerminate, tid);

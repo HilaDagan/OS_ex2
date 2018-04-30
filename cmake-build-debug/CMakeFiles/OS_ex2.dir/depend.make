@@ -6,4 +6,9 @@ CMakeFiles/OS_ex2.dir/Thread.cpp.o: ../Thread.h
 CMakeFiles/OS_ex2.dir/Thread.cpp.o: ../uthreads.h
 
 CMakeFiles/OS_ex2.dir/main.cpp.o: ../main.cpp
+CMakeFiles/OS_ex2.dir/main.cpp.o: ../uthreads.h
+
+CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o: ../Thread.h
+CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o: ../uthreads.h
+CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o: ../uthreads_test.cpp
 

@@ -5,10 +5,6 @@
 
 #include "uthreads.h"
 #include "Thread.cpp"
-#include <stdio.h>
-#include <signal.h>
-#include <sys/time.h>
-#include <vector>
 #include <algorithm> // todo - is ok?
 #include <map>
 
@@ -29,7 +25,88 @@ static int totalQuantum;  // the number of a quantums that were started since th
 // was initialized.
 static const int MAIN_THREAD_ID = 0;
 static const int FAILURE = -1;
-int timerExpired = 0; // if the value is 1, the quantum is over.
+//int timerExpired = 0; // if the value is 1, the quantum is over.
+struct itimerval *timer;
+static int curRunningId; //The thread ID of the current running thread;
+
+
+// ============================ Scheduler ======================== //
+
+/**
+ * A function that implement the Round-Robin scheduling policy.
+ * The scheduler decides which thread to run when:
+ *    1. The library is initialized (run the main thread).
+ *    2. The RUNNING thread is preempted due to: terminate itself/ blocked/put into sync.
+ * The input to the function is the length of a quantum in micro-seconds.
+ */
+void scheduler() {
+    Thread *curThread = threadsDic[curRunningId];
+    int ret_val = sigsetjmp(*(curThread->_env), 1);
+    printf("SWITCH: ret_val=%d\n", ret_val);
+    if (ret_val == curThread->getId()) {  // means that we restore the thread env' and not save it.
+        return;
+    }
+
+    // move the next thread in the list of READY threads to RUNNING state.
+    int nextId = readyThreads.front();
+    readyThreads.pop_front();
+    threadsDic[nextId]->setState(RUNNING);
+    curRunningId = nextId;
+    curThread = threadsDic[curRunningId];
+
+    curThread->increasQuantums();
+
+    if (setitimer(ITIMER_VIRTUAL, &(*timer), NULL)) {
+        printf("setitimer error.");
+    }
+    siglongjmp(*(curThread->_env), curRunningId);
+
+}
+
+
+/*
+ * Handle SIGVTALRM.
+ */
+void switchThreads(int sig)
+{
+    Thread *curThread = threadsDic[curRunningId];
+
+    // Move the thread to the READY state and place it at
+    // the end of the list of READY threads
+    curThread->setState(READY);
+    readyThreads.push_back(curRunningId);
+    scheduler();
+}
+
+
+void setupTimer(int quantum){
+    struct sigaction sa;
+
+    // Install switchThreads as the signal handler for SIGVTALRM.
+    sa.sa_handler = &switchThreads;
+    if (sigaction(SIGVTALRM, &sa, NULL) < 0) {
+        printf("sigaction error."); //todo
+    }
+
+    // Configure the timer to expire after 1 sec... */
+    timer->it_value.tv_sec = 0;		// first time interval, seconds part
+    timer->it_value.tv_usec = quantum;		// first time interval, microseconds part
+
+    // configure the timer to expire every 3 sec after that.
+    timer->it_interval.tv_sec = 0;	// following time intervals, seconds part
+    timer->it_interval.tv_usec = quantum;	// following time intervals, microseconds part //todo
+
+    // Start a virtual timer. It counts down whenever this process is executing.
+    // ITIMER_VIRTUAL decrements only when the process is executing,
+    // and delivers SIGVTALRM upon expiration.
+    if (setitimer (ITIMER_VIRTUAL, &(*timer), NULL)) {
+        printf("setitimer error.");
+    }
+}
+
+// ========================== End Scheduler ====================== //
+
+
 
 /*
  * Description: This function initializes the thread library.
@@ -46,11 +123,12 @@ int uthread_init(int quantum_usecs){
     }
 //    quantum = quantum_usecs;
     totalQuantum = 1;  // only the current quantum.
-    Thread::curRunningId = 0;  // the main thread.
-    //todo - should we add it to the dic?
+    curRunningId = 0;  // the main thread.
     idCounter = 0;  // 0 is used by the main thread.
-    uthread_spawn(nullptr); // create the main thread.
-    scheduler(quantum_usecs);
+    int mainId = uthread_spawn(nullptr); // create the main thread.
+    setupTimer(quantum_usecs);
+    sigsetjmp(*(threadsDic[mainId]->_env), 1);
+//    siglongjmp(*(threadsDic[mainId]->_env), mainId); // TODO - WHERE IS THE LOOP.
     return 0;
 }
 
@@ -139,8 +217,8 @@ int uthread_terminate(int tid){ //todo
         //todo releasing the assigned library memory
         exit(0);
     }
-    if (tid == Thread::curRunningId) {  // a thread terminates itself
-        //todo - not return
+    if (tid == curRunningId) {  // a thread terminates itself
+        scheduler(); //todo - not return
     }
     if (threadsDic.find(tid) == threadsDic.end()) { // no thread with ID tid exist
         return FAILURE;
@@ -176,12 +254,12 @@ int uthread_block(int tid) {
     if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
         return FAILURE;
     }
-    if (Thread::curRunningId == tid) {  // a thread blocks itself
-        // todo - a scheduling decision should be made.
+    if (curRunningId == tid) {  // a thread blocks itself
+        threadsDic[tid]->setState(BLOCKED);
+        scheduler();
     }
     if (threadsDic[tid]->getState() == READY) {
-        readyThreads.erase(remove(readyThreads.begin(), readyThreads.end(), tid),
-                           readyThreads.end());
+        readyThreads.remove(tid);
     }
     if (threadsDic[tid]->getState() != BLOCKED and threadsDic[tid]->getState() != SYNCED)
     {
@@ -226,12 +304,12 @@ int uthread_sync(int tid){
         return FAILURE;
     }
 
-    Thread *curThread = threadsDic[Thread::curRunningId];
+    Thread *curThread = threadsDic[curRunningId];
     curThread->setState(SYNCED);
     curThread->setDependentIn(tid); // the current thread is dependent on tid.
 
-    threadsDic[tid]->addToDependenciesList(Thread::curRunningId); // add this thread to the list.
-    //todo -  a scheduling decision should be made. here? or outside this function?
+    threadsDic[tid]->addToDependenciesList(curRunningId); // add this thread to the list.
+    scheduler();
     return 0;
 }
 
@@ -241,7 +319,7 @@ int uthread_sync(int tid){
  * Return value: The ID of the calling thread.
 */
 int uthread_get_tid(){
-    return Thread::curRunningId;
+    return curRunningId;
 }
 
 
@@ -279,84 +357,3 @@ int uthread_get_quantums(int tid){
 }
 
 
-/*
- * Handle SIGVTALRM.
- */
-void switchThreads(int sig)
-{
-    timerExpired = 1;
-
-    static int currentThread = 0; //todo - from here
-
-    int ret_val = sigsetjmp(env[currentThread],1);
-    printf("SWITCH: ret_val=%d\n", ret_val);
-    if (ret_val == 1) {
-        return;
-    }
-    currentThread = 1 - currentThread;
-    siglongjmp(env[currentThread],1);
-}
-
-    //todo
-}
-
-
-void setupTimer(int quantum){
-    struct sigaction sa;
-    struct itimerval timer;
-
-    // Install switchThreads as the signal handler for SIGVTALRM.
-    sa.sa_handler = &switchThreads;
-    if (sigaction(SIGVTALRM, &sa, NULL) < 0) {
-        printf("sigaction error."); //todo
-    }
-
-    // Configure the timer to expire after 1 sec... */
-    timer.it_value.tv_sec = 0;		// first time interval, seconds part
-    timer.it_value.tv_usec = quantum;		// first time interval, microseconds part
-
-    // configure the timer to expire every 3 sec after that.
-    timer.it_interval.tv_sec = 0;	// following time intervals, seconds part
-    timer.it_interval.tv_usec = quantum;	// following time intervals, microseconds part //todo
-
-    // Start a virtual timer. It counts down whenever this process is executing.
-    // ITIMER_VIRTUAL decrements only when the process is executing,
-    // and delivers SIGVTALRM upon expiration.
-    if (setitimer (ITIMER_VIRTUAL, &timer, NULL)) {
-        printf("setitimer error.");
-    }
-}
-
-
-/**
- * A function that implement the Round-Robin scheduling policy.
- * The scheduler decides which thread to run when:
- *    1. The library is initialized (run the main thread).
- *    2. The RUNNING thread is preempted due to: terminate itself/ blocked/put into sync.
- * The input to the function is the length of a quantum in micro-seconds.
- */
-void scheduler(int quantum){
-
-
-    for(;;) {
-        if (timerExpired) {
-            printf("Got it!\n");
-            timerExpired = 0;
-        }
-    }
-
-
-    // Move the thread to the READY state and place it at
-    // the end of the list of READY threads.
-
-    // if its quantum expired:
-    thread->setState(READY);
-    readyThreads.push_back(tid);
-
-    // move the next thread in the list of READY threads to RUNNING state.
-    int nextId = readyThreads.front();
-    readyThreads.pop_front();
-    threadsDic[nextId]->setState(RUNNING);
-    Thread::curRunningId = nextId;
-    threadsDic[nextId]->increasQuantums();
-}

@@ -4,6 +4,18 @@
 #include "Thread.h"
 
 
+/* A translation is required when using an address of a variable.
+   Use this as a black box in your code. */
+address_t Thread::translate_address(address_t addr)
+{
+    address_t ret;
+    asm volatile("xor    %%fs:0x30,%0\n"
+            "rol    $0x11,%0\n"
+    : "=g" (ret)
+    : "0" (addr));
+    return ret;
+}
+
 
 /**
  * Initialize the new thread
@@ -109,7 +121,7 @@ int Thread::getQuantums() const {
  * Increase the number of quantums that 'this' was in RUNNING state.
  */
 void Thread::increasQuantums(){
-    _quantumsNum++;
+    this->_quantumsNum++;
 }
 
 /**
@@ -117,9 +129,14 @@ void Thread::increasQuantums(){
  */
 void Thread::setupEnv() {
     _sp = (address_t)_stack + STACK_SIZE - sizeof(address_t);
-    _pc = (address_t)*_function;
+    if (_function != nullptr){
+        _pc = (address_t)_function; //todo
+    } else { //its the main thread.
+        _pc = 0;
+    }
     sigsetjmp(_env, 1);
-    (_env->__jmpbuf)[JB_SP] = translate_address(_sp);
-    (_env->__jmpbuf)[JB_PC] = translate_address(_pc);
-    sigemptyset(&_env->__saved_mask);
+
+    ((_env)->__jmpbuf)[JB_SP] = translate_address(_sp);
+    ((_env)->__jmpbuf)[JB_PC] = translate_address(_pc);
+//    sigemptyset(&(_env)->__saved_mask); //todo
 }

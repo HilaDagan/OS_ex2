@@ -1,7 +1,7 @@
 #include <iostream>
 #include "uthreads.h"
 
-
+int thread1, thread2, thread3;
 
 
 
@@ -10,10 +10,12 @@ void f1(){
     for(;;) {
         x++;
         if (x%100000 == 0){
-//            printf("thread1\n");
+            printf("thread1\n");
+            uthread_terminate(thread1); // because we can assume that all threads end with uthread_terminate.
+
         }
+
     }
-    return;
 }
 
 void f2(){
@@ -50,13 +52,13 @@ int main()
     printf("main added\n");
 
 
-    int thread1 = uthread_spawn(f1);
+    thread1 = uthread_spawn(f1);
     printf("added 1\n");
 
-    int thread2 = uthread_spawn(f2);
+    thread2 = uthread_spawn(f2);
     printf("added 2\n");
 
-    int thread3 = uthread_spawn(f3); //
+    thread3 = uthread_spawn(f3); //
     printf("added 3\n");
 
     std::cout << "Hello, World!" << std::endl;
@@ -65,7 +67,11 @@ int main()
         w++;
         if (w%100000 == 0){
             printf("main thread\n");
+
         }
+//        if (w == 100000000){
+//            break;
+//        }
 
     }
     return 0; // exit the program - after creating the three threads - will not necessarily wait

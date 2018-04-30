@@ -138,5 +138,5 @@ void Thread::setupEnv() {
 
     ((_env)->__jmpbuf)[JB_SP] = translate_address(_sp);
     ((_env)->__jmpbuf)[JB_PC] = translate_address(_pc);
-//    sigemptyset(&(_env)->__saved_mask); //todo
+    sigemptyset(&(_env)->__saved_mask); //todo
 }

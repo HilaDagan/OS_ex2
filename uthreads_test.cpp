@@ -33,6 +33,8 @@ static const int FAILURE = -1;
 //int timerExpired = 0; // if the value is 1, the quantum is over.
 struct itimerval timer;
 
+void getNextThread();
+
 static int curRunningId; //The thread ID of the current running thread;
 sigset_t set;
 
@@ -49,6 +51,24 @@ void sigvtalrmMask(int how){
 
 
 
+void getNextThread() {
+    int nextId = readyThreads.front();
+    readyThreads.pop_front();
+//    printf("next id=%d\n", nextId);
+    threadsDic[nextId]->setState(RUNNING);
+    curRunningId = nextId;
+    Thread *curThread = threadsDic[curRunningId];
+
+    curThread->increasQuantums();
+
+    if (setitimer(ITIMER_VIRTUAL, &(timer), NULL)) {
+        printf("setitimer error.");
+    }
+    sigvtalrmMask(SIG_UNBLOCK);
+    siglongjmp((curThread->_env), (curRunningId + 1));
+
+}
+
 /**
  * A function that implement the Round-Robin scheduling policy.
  * The scheduler decides which thread to run when:
@@ -57,32 +77,27 @@ void sigvtalrmMask(int how){
  * The input to the function is the length of a quantum in micro-seconds.
  */
 void scheduler() {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
 
 
     Thread *curThread = threadsDic[curRunningId];
     int ret_val = sigsetjmp((curThread->_env), 1);
     printf("SWITCH: ret_val=%d\n", ret_val);
-    if (ret_val == curThread->getId() + 1) {  // means that we restore the thread env' and not save it.
+    if (ret_val != 0 ) {  // means that we restore the thread env' and not save it.
+//    if (ret_val == (curThread->getId())) {  // means that we restore the thread env' and not save it.
         return;
     }
 
     // move the next thread in the list of READY threads to RUNNING state.
-    int nextId = readyThreads.front();
-    readyThreads.pop_front();
-    printf("next id=%d\n", nextId);
-    threadsDic[nextId]->setState(RUNNING);
-    curRunningId = nextId;
-    curThread = threadsDic[curRunningId];
-
-    curThread->increasQuantums();
-
-    if (setitimer(ITIMER_VIRTUAL, &(timer), NULL)) {
-        printf("setitimer error.");
+    std::list<int>::iterator it;
+    for (it = readyThreads.begin(); it != readyThreads.end(); ++it) {
+        std::cout << *it << std::endl;
     }
-    sigvtalrmMask(SIG_UNBLOCK);
-    siglongjmp((curThread->_env), curRunningId + 1);
+
+    getNextThread();
 }
+
+
 
 
 /*
@@ -90,20 +105,21 @@ void scheduler() {
  */
 void switchThreads(int sig)
 {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
     Thread *curThread = threadsDic[curRunningId];
 
     // Move the thread to the READY state and place it at
     // the end of the list of READY threads
     curThread->setState(READY);
     readyThreads.push_back(curRunningId);
-    scheduler();
+//    printf("id to add=%d\n", curRunningId);
     sigvtalrmMask(SIG_UNBLOCK); //TODO - should we block also inside schduler?
+    scheduler();
 }
 
 
 void setupTimer(int quantum){
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
 
     struct sigaction sa;
 
@@ -140,7 +156,7 @@ void setupTimer(int quantum){
  * Return value: On success, return 0. On failure, return -1.
 */
 int uthread_init(int quantum_usecs){
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
     if (quantum_usecs <= 0)
     {
         return FAILURE;
@@ -152,13 +168,11 @@ int uthread_init(int quantum_usecs){
     int mainId = uthread_spawn(nullptr); // create the main thread.
     threadsDic[mainId]->setState(RUNNING);
 
-    setupTimer(quantum_usecs);
+    setupTimer(quantum_usecs);  // set the timer.
 
      //todo - the first signal can be sent only now, right?
     sigsetjmp((threadsDic[mainId]->_env), 1);
     sigvtalrmMask(SIG_UNBLOCK); //todo - ok?
-//    siglongjmp((threadsDic[mainId]->_env), mainId);
-    // todo - to terminate the main.
     return 0;
 }
 
@@ -169,7 +183,7 @@ int uthread_init(int quantum_usecs){
  */
 int findId()  //todo - need here mask?
 {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
     int newId;
     if (unusedId.empty()) {
         newId = idCounter;
@@ -202,12 +216,7 @@ int findId()  //todo - need here mask?
  * On failure, return -1.
 */
 int uthread_spawn(void (*f)(void)){
-//    bool mask = false;
-//    if (!readyThreads.empty()){ // it is not the main thread.
-//        mask = true;
     sigvtalrmMask(SIG_SETMASK);
-//    }
-
     int newId;
 
     if (threadsDic.size() == MAX_THREAD_NUM){
@@ -224,9 +233,51 @@ int uthread_spawn(void (*f)(void)){
         std::cout << *it << std::endl;
 
     }
-//    if (mask){
     sigvtalrmMask(SIG_UNBLOCK);
-//    }
     return newId;
+}
+
+/*
+ * Description: This function terminates the thread with ID tid and deletes
+ * it from all relevant control structures. All the resources allocated by
+ * the library for this thread should be released. If no thread with ID tid
+ * exists it is considered as an error. Terminating the main thread
+ * (tid == 0) will result in the termination of the entire process using
+ * exit(0) [after releasing the assigned library memory].
+ * Return value: The function returns 0 if the thread was successfully
+ * terminated and -1 otherwise. If a thread terminates itself or the main
+ * thread is terminated, the function does not return.
+*/
+int uthread_terminate(int tid){ //todo
+    if (threadsDic.find(tid) == threadsDic.end()) { // no thread with ID tid exist
+        return FAILURE;
+    }
+    if (tid == MAIN_THREAD_ID) { // terminating the main thread
+        //todo: releasing the assigned library memory - all the exciting threads in the dic!
+        delete threadsDic[tid]; //todo - the order is fine?
+        threadsDic.erase(tid);
+        exit(0);
+    }
+
+
+    Thread *threadToTerminate = threadsDic[tid];
+    ThreadState tstate = threadToTerminate->getState();
+    if (tstate == READY) { // removes from the READY threads list.
+        readyThreads.remove(tid);
+
+    } else if (tstate == BLOCKED) {  // removes from the BLOCKED threads list.
+        blockedThreads.remove(tid);
+    }
+
+//    removeFromDependencyList(threadToTerminate, tid); // todo - remove comment
+    delete threadsDic[tid]; //todo - the order is fine?
+    threadsDic.erase(tid);
+
+    if (tid == curRunningId) {  // a thread terminates itself
+
+        getNextThread(); //todo - not return
+    }
+
+    return 0;
 }
 

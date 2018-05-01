@@ -18,7 +18,7 @@
 static std::map<int, Thread*> threadsDic; // contain all the existing threads.// todo - include the main?
 // the current number of threads in the size of the dic + 1 (for the main thread)
 static std::list<int> blockedThreads; // contain all threads id that are currently
-// blocked.
+// blocked, OR blocked and synced.
 static std::list<int> readyThreads; // contain all threads id that are currently ready
 // to run.
 
@@ -50,8 +50,18 @@ void sigvtalrmMask(int how){
 }
 
 
-
+/**
+ * Move the next thread in the list of READY threads to RUNNING state.
+ */
 void getNextThread() {
+    sigvtalrmMask(SIG_BLOCK);
+
+    std::list<int>::iterator it;
+    for (it = readyThreads.begin(); it != readyThreads.end(); ++it) {
+        std::cout << *it << std::endl;
+    }
+
+
     int nextId = readyThreads.front();
     readyThreads.pop_front();
 //    printf("next id=%d\n", nextId);
@@ -64,9 +74,8 @@ void getNextThread() {
     if (setitimer(ITIMER_VIRTUAL, &(timer), NULL)) {
         printf("setitimer error.");
     }
-    sigvtalrmMask(SIG_UNBLOCK);
     siglongjmp((curThread->_env), (curRunningId + 1));
-
+    sigvtalrmMask(SIG_UNBLOCK);
 }
 
 /**
@@ -88,13 +97,9 @@ void scheduler() {
         return;
     }
 
-    // move the next thread in the list of READY threads to RUNNING state.
-    std::list<int>::iterator it;
-    for (it = readyThreads.begin(); it != readyThreads.end(); ++it) {
-        std::cout << *it << std::endl;
-    }
 
     getNextThread();
+    sigvtalrmMask(SIG_UNBLOCK);
 }
 
 
@@ -113,8 +118,9 @@ void switchThreads(int sig)
     curThread->setState(READY);
     readyThreads.push_back(curRunningId);
 //    printf("id to add=%d\n", curRunningId);
-    sigvtalrmMask(SIG_UNBLOCK); //TODO - should we block also inside schduler?
+//    sigvtalrmMask(SIG_UNBLOCK); //TODO - should we block also inside schduler?
     scheduler();
+    sigvtalrmMask(SIG_UNBLOCK);
 }
 
 
@@ -249,13 +255,27 @@ int uthread_spawn(void (*f)(void)){
  * thread is terminated, the function does not return.
 */
 int uthread_terminate(int tid){ //todo
+    sigvtalrmMask(SIG_SETMASK);
+    printf("terminate %d\n", tid);
+
     if (threadsDic.find(tid) == threadsDic.end()) { // no thread with ID tid exist
         return FAILURE;
     }
     if (tid == MAIN_THREAD_ID) { // terminating the main thread
         //todo: releasing the assigned library memory - all the exciting threads in the dic!
-        delete threadsDic[tid]; //todo - the order is fine?
-        threadsDic.erase(tid);
+        std::map<int, Thread*>::iterator it;
+
+        for (it = threadsDic.begin(); it != threadsDic.end(); it++ )
+        {
+            delete it->second;
+            threadsDic.erase(it);
+
+        }
+        threadsDic.clear();
+        readyThreads.clear();
+        blockedThreads.clear();
+        unusedId.clear();
+
         exit(0);
     }
 
@@ -273,11 +293,121 @@ int uthread_terminate(int tid){ //todo
     delete threadsDic[tid]; //todo - the order is fine?
     threadsDic.erase(tid);
 
-    if (tid == curRunningId) {  // a thread terminates itself
+//    std::map<int, Thread*>::iterator it;
+//
+//    for (it = threadsDic.begin(); it != threadsDic.end(); ++it )
+//    {
+//        std::cout << int(it->first)  // string (key)
+//                  << ':'
+//                  << it->second->getId()   // string's value
+//                  << std::endl ;
+//    }
 
+    if (tid == curRunningId) {  // a thread terminates itself
         getNextThread(); //todo - not return
     }
-
+    sigvtalrmMask(SIG_UNBLOCK);
     return 0;
 }
 
+
+
+
+
+
+/*
+ * Description: This function blocks the thread with ID tid. The thread may
+ * be resumed later using uthread_resume. If no thread with ID tid exists it
+ * is considered as an error. In addition, it is an error to try blocking the
+ * main thread (tid == 0). If a thread blocks itself, a scheduling decision
+ * should be made. Blocking a thread in BLOCKED state has no
+ * effect and is not considered as an error.
+ * Return value: On success, return 0. On failure, return -1.
+*/
+int uthread_block(int tid) {
+    sigvtalrmMask(SIG_SETMASK);
+
+    // no thread with ID tid exist or trying to block the main thread:
+    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+        return FAILURE;
+    }
+
+    if (threadsDic[tid]->getState() != BLOCKED and threadsDic[tid]->getState() != BLOCKED_SYNCED)
+    {
+        if (threadsDic[tid]->getState() == READY) {
+            readyThreads.remove(tid);
+        }
+        threadsDic[tid]->setState(BLOCKED);
+
+        if (threadsDic[tid]->getState() == SYNCED) {
+//            printf("blocked synced %d\n", tid);
+            threadsDic[tid]->setState(BLOCKED_SYNCED);
+        }
+
+        blockedThreads.push_back(tid);
+
+        if (curRunningId == tid) {  // a thread blocks itself
+            printf("blocked myself");
+            scheduler();
+        } else {
+            printf("blocked %d\n", tid);
+
+        }
+    }
+    sigvtalrmMask(SIG_UNBLOCK);
+    return 0;
+}
+
+
+/*
+ * Description: This function resumes a blocked thread with ID tid and moves
+ * it to the READY state. Resuming a thread in a RUNNING or READY state
+ * has no effect and is not considered as an error. If no thread with
+ * ID tid exists it is considered as an error.
+ * Return value: On success, return 0. On failure, return -1.
+*/
+int uthread_resume(int tid)
+{
+    sigvtalrmMask(SIG_SETMASK);
+    printf("resumed %d\n", tid);
+    // no thread with ID tid exist or trying to block the main thread:
+    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+        return FAILURE;
+    }
+    if (threadsDic[tid]->getState() != RUNNING and threadsDic[tid]->getState() != READY){
+        if (threadsDic[tid]->getState() == BLOCKED_SYNCED) {
+            threadsDic[tid]->setState(SYNCED);
+
+        } else {
+            threadsDic[tid]->setState(READY);
+            readyThreads.push_back(tid);
+        }
+        blockedThreads.remove(tid);
+    }
+    sigvtalrmMask(SIG_UNBLOCK);
+    return 0;
+}
+
+
+
+/*
+ * Description: This function blocks the RUNNING thread until thread with
+ * ID tid will terminate. It is considered an error if no thread with ID tid
+ * exists or if the main thread (tid==0) calls this function. Immediately after the
+ * RUNNING thread transitions to the BLOCKED state a scheduling decision should be made.
+ * Return value: On success, return 0. On failure, return -1.
+*/
+int uthread_sync(int tid){
+    // no thread with ID tid exist or trying to sync the main thread:
+    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+        return FAILURE;
+    }
+
+    Thread *curThread = threadsDic[curRunningId];
+    curThread->setState(SYNCED);
+    curThread->setDependentIn(tid); // the current thread is dependent on tid.
+
+    threadsDic[tid]->addToDependenciesList(curRunningId); // add this thread to the list.
+    scheduler();
+    return 0;
+}

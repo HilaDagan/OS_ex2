@@ -10,9 +10,15 @@ void f1(){
     for(;;) {
         x++;
         if (x%100000 == 0){
-            printf("thread1\n");
-            uthread_terminate(thread1); // because we can assume that all threads end with uthread_terminate.
+//            printf("thread1\n");
 
+            //todo:  termination test:
+//            uthread_terminate(thread1); // because we can assume that all threads end with uthread_terminate.
+//            break;
+
+            // todo - block test
+//            uthread_block(thread1); // self block.
+            uthread_block(thread2); // block of thread in ready
         }
 
     }
@@ -22,8 +28,13 @@ void f2(){
     int y = 0;
     for(;;) {
         y++;
-        if (y%100000 == 0) {
+        if (y%100000000 == 0) {
 //            printf("thread2\n");
+            uthread_resume(thread1); // todo - block test
+
+            uthread_terminate(thread2); // because we can assume that all threads end with uthread_terminate.
+            break;
+
         }
     }
     return;
@@ -32,8 +43,20 @@ void f3(){
     int z = 0;
     for(;;) {
         z++;
-        if (z%100000 == 0){
+        if (z%10000000 == 0){
 //            printf("thread3\n");
+//            uthread_terminate(thread1);// check the terminate of the same thread twice.
+//            uthread_terminate(thread2); // check the termination of other thread.
+//            uthread_terminate(0); // check the termination of the main thread.
+//            uthread_terminate(thread3); // because we can assume that all threads end with uthread_terminate.
+//            break;
+
+        }
+        if (z%100000000 == 0){
+//            printf("thread3\n");
+            uthread_terminate(thread3); // because we can assume that all threads end with uthread_terminate.
+            break;
+
         }
     }
     return;
@@ -65,10 +88,10 @@ int main()
     int w = 0;
     for(;;){
         w++;
-        if (w%100000 == 0){
-            printf("main thread\n");
+//        if (w%100000 == 0){
+//            printf("main thread\n");
 
-        }
+//        }
 //        if (w == 100000000){
 //            break;
 //        }

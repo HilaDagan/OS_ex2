@@ -19,7 +19,8 @@ typedef enum ThreadState
     READY,
     RUNNING,
     BLOCKED,
-    SYNCED
+    SYNCED,
+    BLOCKED_SYNCED
 } ThreadState;
 
 /**

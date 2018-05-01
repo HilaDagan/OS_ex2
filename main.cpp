@@ -41,16 +41,17 @@ void f2(){
 
         // todo - synce test:
 
-        if (y == 100000000) { // 1 and 3 are synced with 2.
+        if (y == 10000000) { // 1 and 3 are synced with 2.
 //            printf("thread2\n");
-              uthread_resume(thread1); // todo - block test
+//              uthread_resume(thread1); // todo - block test
+            uthread_sync(thread1); // 2 is also synced - and by 1.
 
         }
-        if (y == 1000000000 ) { // 1 and 3 are synced with 2.
-//            printf("thread2\n");
-            uthread_terminate(thread2); // because we can assume that all threads end with uthread_terminate.
-            break;
-        }
+//        if (y == 1000000000 ) { // 1 and 3 are synced with 2.
+////            printf("thread2\n");
+//            uthread_terminate(thread2); // because we can assume that all threads end with uthread_terminate.
+//            break;
+//        }
     }
     return;
 }
@@ -76,7 +77,7 @@ void f3(){
 
         // todo - synce test:
         if (z==100000){
-            uthread_block(thread1); // a case in which thread 1 is also blocked.
+//            uthread_block(thread1); // a case in which thread 1 is also blocked.
             uthread_sync(thread2);
         }
     }
@@ -113,9 +114,14 @@ int main()
 //            printf("main thread\n");
 
 //        }
-//        if (w == 100000000){
+        if (w == 100000000){ // todo - block test
+            // 2 is also synced - and by 1. released here by the main thread.
+            uthread_terminate(thread2);
+            uthread_terminate(thread1);
 //            break;
-//        }
+        }
+
+
 
     }
     return 0; // exit the program - after creating the three threads - will not necessarily wait

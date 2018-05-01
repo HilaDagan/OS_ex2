@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/Thread.cpp" "/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/cmake-build-debug/CMakeFiles/OS_ex2.dir/Thread.cpp.o"
   "/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/main.cpp" "/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/cmake-build-debug/CMakeFiles/OS_ex2.dir/main.cpp.o"
-  "/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads_test.cpp" "/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/cmake-build-debug/CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o"
+  "/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.cpp" "/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/cmake-build-debug/CMakeFiles/OS_ex2.dir/uthreads.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -93,7 +93,10 @@
 		<Unit filename="/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/main.cpp">
 			<Option target="OS_ex2"/>
 		</Unit>
-		<Unit filename="/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads_test.cpp">
+		<Unit filename="/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.cpp">
+			<Option target="OS_ex2"/>
+		</Unit>
+		<Unit filename="/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.h">
 			<Option target="OS_ex2"/>
 		</Unit>
 		<Unit filename="/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/CMakeLists.txt">

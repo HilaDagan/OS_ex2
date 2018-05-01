@@ -9,7 +9,7 @@ void f1(){
     int x = 0;
     for(;;) {
         x++;
-        if (x%100000 == 0){
+        if (x%100000 == 0) {
 //            printf("thread1\n");
 
             //todo:  termination test:
@@ -18,7 +18,10 @@ void f1(){
 
             // todo - block test
 //            uthread_block(thread1); // self block.
-            uthread_block(thread2); // block of thread in ready
+//            uthread_block(thread2); // block of thread in ready
+        }
+        if (x==100000){// todo - synce test:
+            uthread_sync(thread2);
         }
 
     }
@@ -28,13 +31,25 @@ void f2(){
     int y = 0;
     for(;;) {
         y++;
-        if (y%100000000 == 0) {
-//            printf("thread2\n");
-            uthread_resume(thread1); // todo - block test
+//        if (y%100000000 == 0) {
+////            printf("thread2\n");
+////            uthread_resume(thread1); // todo - block test
+//            uthread_terminate(thread2); // because we can assume that all threads end with uthread_terminate.
+//            break;
+//
+//        }
 
+        // todo - synce test:
+
+        if (y == 100000000) { // 1 and 3 are synced with 2.
+//            printf("thread2\n");
+              uthread_resume(thread1); // todo - block test
+
+        }
+        if (y == 1000000000 ) { // 1 and 3 are synced with 2.
+//            printf("thread2\n");
             uthread_terminate(thread2); // because we can assume that all threads end with uthread_terminate.
             break;
-
         }
     }
     return;
@@ -52,11 +67,17 @@ void f3(){
 //            break;
 
         }
-        if (z%100000000 == 0){
-//            printf("thread3\n");
-            uthread_terminate(thread3); // because we can assume that all threads end with uthread_terminate.
-            break;
+//        if (z%100000000 == 0){
+////            printf("thread3\n");
+//            uthread_terminate(thread3); // because we can assume that all threads end with uthread_terminate.
+//            break;
+//
+//        }
 
+        // todo - synce test:
+        if (z==100000){
+            uthread_block(thread1); // a case in which thread 1 is also blocked.
+            uthread_sync(thread2);
         }
     }
     return;

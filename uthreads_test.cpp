@@ -243,6 +243,43 @@ int uthread_spawn(void (*f)(void)){
     return newId;
 }
 
+
+/*
+ * Remove the given terminated thread from the dependencies lists of other threads.
+ */
+void removeFromDependencyList(const Thread *deadThread, const int id)
+{
+    sigvtalrmMask(SIG_SETMASK);
+
+    // If the dead thread was dependent in other thread, remove it from the dependency list
+    // of that thread:
+    if (deadThread->getDependentIn() != NOT_DEPENDENT) {
+        threadsDic[deadThread->getDependentIn()]->removeDependentThread(id);
+    }
+
+    // If there are threads that are dependent in the given dead thread,
+    // remove it and change their state to READY.
+    std::list<int> depList = deadThread->getDependenciesList();
+    std::list<int>::iterator it;
+    for (it = depList.begin(); it != depList.end(); ++it)
+    {
+        printf("released from sync: %d\n", *it);
+        threadsDic[*it]->resetDependentIn();
+        if (threadsDic[*it]->getState() == SYNCED)  {
+            threadsDic[*it]->setState(READY);
+            readyThreads.push_back(*it);
+
+        } else if (threadsDic[*it]->getState() == BLOCKED_SYNCED) {
+            threadsDic[*it]->setState(BLOCKED);
+            blockedThreads.push_back(*it);
+
+        }
+    }
+    sigvtalrmMask(SIG_UNBLOCK);
+
+}
+
+
 /*
  * Description: This function terminates the thread with ID tid and deletes
  * it from all relevant control structures. All the resources allocated by
@@ -289,7 +326,8 @@ int uthread_terminate(int tid){ //todo
         blockedThreads.remove(tid);
     }
 
-//    removeFromDependencyList(threadToTerminate, tid); // todo - remove comment
+    removeFromDependencyList(threadToTerminate, tid);
+
     delete threadsDic[tid]; //todo - the order is fine?
     threadsDic.erase(tid);
 
@@ -334,14 +372,16 @@ int uthread_block(int tid) {
 
     if (threadsDic[tid]->getState() != BLOCKED and threadsDic[tid]->getState() != BLOCKED_SYNCED)
     {
-        if (threadsDic[tid]->getState() == READY) {
-            readyThreads.remove(tid);
-        }
-        threadsDic[tid]->setState(BLOCKED);
-
         if (threadsDic[tid]->getState() == SYNCED) {
-//            printf("blocked synced %d\n", tid);
+            printf("blocked synced %d\n", tid);
             threadsDic[tid]->setState(BLOCKED_SYNCED);
+
+        } else { // READY or RUNNING
+            threadsDic[tid]->setState(BLOCKED);
+
+            if (threadsDic[tid]->getState() == READY) {
+                readyThreads.remove(tid);
+            }
         }
 
         blockedThreads.push_back(tid);
@@ -374,16 +414,16 @@ int uthread_resume(int tid)
     if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
         return FAILURE;
     }
-    if (threadsDic[tid]->getState() != RUNNING and threadsDic[tid]->getState() != READY){
-        if (threadsDic[tid]->getState() == BLOCKED_SYNCED) {
-            threadsDic[tid]->setState(SYNCED);
+    if (threadsDic[tid]->getState() == BLOCKED_SYNCED) {
+        threadsDic[tid]->setState(SYNCED);
+        blockedThreads.remove(tid);
 
-        } else {
-            threadsDic[tid]->setState(READY);
-            readyThreads.push_back(tid);
-        }
+    } else if (threadsDic[tid]->getState() == BLOCKED) {
+        threadsDic[tid]->setState(READY);
+        readyThreads.push_back(tid);
         blockedThreads.remove(tid);
     }
+
     sigvtalrmMask(SIG_UNBLOCK);
     return 0;
 }
@@ -398,16 +438,19 @@ int uthread_resume(int tid)
  * Return value: On success, return 0. On failure, return -1.
 */
 int uthread_sync(int tid){
+    sigvtalrmMask(SIG_SETMASK);
+
     // no thread with ID tid exist or trying to sync the main thread:
     if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
         return FAILURE;
     }
 
     Thread *curThread = threadsDic[curRunningId];
-    curThread->setState(SYNCED);
+    curThread->setState(SYNCED);  // the current state of curThread can be only RUNNING.
     curThread->setDependentIn(tid); // the current thread is dependent on tid.
-
+    printf("%d synced with %d\n", curRunningId, tid);
     threadsDic[tid]->addToDependenciesList(curRunningId); // add this thread to the list.
     scheduler();
+    sigvtalrmMask(SIG_UNBLOCK);
     return 0;
 }

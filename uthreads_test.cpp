@@ -189,6 +189,7 @@ int uthread_init(int quantum_usecs){
  */
 int findId()  //todo - need here mask?
 {
+
     sigvtalrmMask(SIG_BLOCK);
     int newId;
     if (unusedId.empty()) {
@@ -196,6 +197,13 @@ int findId()  //todo - need here mask?
         idCounter++;
         return newId;
     }
+//    std::vector<int>::iterator itt;
+//    printf("useded id ------\n");
+//    for (itt = unusedId.begin(); itt != unusedId.end(); ++itt) {
+//        std::cout << *itt << std::endl;
+//    }
+//    printf("fin ------\n");
+
     std::vector<int>::iterator minId = std::min_element(std::begin(unusedId),
                                                         std::end(unusedId));
     if (idCounter < *minId)
@@ -206,6 +214,15 @@ int findId()  //todo - need here mask?
         newId = *minId;
         unusedId.erase(minId);
     }
+
+
+//    printf("useded id ------\n");
+//    for (itt = unusedId.begin(); itt != unusedId.end(); ++itt) {
+//        std::cout << *itt << std::endl;
+//
+//    }
+//    printf("fin ------\n");
+
     sigvtalrmMask(SIG_UNBLOCK);
     return newId;
 }
@@ -275,6 +292,14 @@ void removeFromDependencyList(const Thread *deadThread, const int id)
 
         }
     }
+
+//    printf("in remove dependencies: ");
+//    std::list<int>::iterator itt;
+//    for (itt = readyThreads.begin(); itt != readyThreads.end(); ++itt) {
+//        printf("in loop: %d\n", *itt);
+//
+//    }
+    printf("------\n");
     sigvtalrmMask(SIG_UNBLOCK);
 
 }
@@ -328,6 +353,7 @@ int uthread_terminate(int tid){ //todo
 
     removeFromDependencyList(threadToTerminate, tid);
 
+    unusedId.push_back(tid);
     delete threadsDic[tid]; //todo - the order is fine?
     threadsDic.erase(tid);
 

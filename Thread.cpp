@@ -28,7 +28,9 @@ Thread::Thread(int id, void (*f)(void)) {
     _dependentIn = NOT_DEPENDENT;
     _quantumsNum = 0;
     _function = f;
-    setupEnv();
+    if (id != 0) { // not the main thread
+        setupEnv();
+    }
 }
 
 /**

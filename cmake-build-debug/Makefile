@@ -177,32 +177,32 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-uthreads.o: uthreads.cpp.o
+uthreads_test.o: uthreads_test.cpp.o
 
-.PHONY : uthreads.o
+.PHONY : uthreads_test.o
 
 # target to build an object file
-uthreads.cpp.o:
-	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads.cpp.o
-.PHONY : uthreads.cpp.o
+uthreads_test.cpp.o:
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o
+.PHONY : uthreads_test.cpp.o
 
-uthreads.i: uthreads.cpp.i
+uthreads_test.i: uthreads_test.cpp.i
 
-.PHONY : uthreads.i
+.PHONY : uthreads_test.i
 
 # target to preprocess a source file
-uthreads.cpp.i:
-	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads.cpp.i
-.PHONY : uthreads.cpp.i
+uthreads_test.cpp.i:
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads_test.cpp.i
+.PHONY : uthreads_test.cpp.i
 
-uthreads.s: uthreads.cpp.s
+uthreads_test.s: uthreads_test.cpp.s
 
-.PHONY : uthreads.s
+.PHONY : uthreads_test.s
 
 # target to generate assembly for a file
-uthreads.cpp.s:
-	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads.cpp.s
-.PHONY : uthreads.cpp.s
+uthreads_test.cpp.s:
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads_test.cpp.s
+.PHONY : uthreads_test.cpp.s
 
 # Help Target
 help:
@@ -219,9 +219,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... uthreads.o"
-	@echo "... uthreads.i"
-	@echo "... uthreads.s"
+	@echo "... uthreads_test.o"
+	@echo "... uthreads_test.i"
+	@echo "... uthreads_test.s"
 .PHONY : help
 
 

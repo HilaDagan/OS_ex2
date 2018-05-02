@@ -1,7 +1,7 @@
 #include <iostream>
 #include "uthreads.h"
 
-int thread1, thread2, thread3;
+int thread1, thread2, thread3, thread4;
 
 
 
@@ -117,7 +117,10 @@ int main()
         if (w == 100000000){ // todo - block test
             // 2 is also synced - and by 1. released here by the main thread.
             uthread_terminate(thread2);
-            uthread_terminate(thread1);
+            thread4 = uthread_spawn(f2);
+            printf("added 4----------------------------------------------------------\n");
+//            printf("id = %d\n", thread4.get);
+//            uthread_terminate(thread1);
 //            break;
         }
 

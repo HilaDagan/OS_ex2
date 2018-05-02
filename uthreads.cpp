@@ -326,6 +326,7 @@ int uthread_terminate(int tid){ //todo
 
     removeFromDependencyList(threadToTerminate, tid);
 
+    unusedId.push_back(tid);
     delete threadsDic[tid]; //todo - the order is fine?
     threadsDic.erase(tid);
 
@@ -364,11 +365,11 @@ int uthread_block(int tid) {
     sigvtalrmMask(SIG_SETMASK);
 
     // no thread with ID tid exist or trying to block the main thread:
-    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+    if ((threadsDic.find(tid) == threadsDic.end()) || (tid == 0)) {
         return FAILURE;
     }
 
-    if (threadsDic[tid]->getState() != BLOCKED and threadsDic[tid]->getState() != BLOCKED_SYNCED)
+    if (threadsDic[tid]->getState() != BLOCKED && threadsDic[tid]->getState() != BLOCKED_SYNCED)
     {
         if (threadsDic[tid]->getState() == SYNCED) {
 //            printf("blocked synced %d\n", tid);
@@ -410,7 +411,7 @@ int uthread_resume(int tid)
     sigvtalrmMask(SIG_SETMASK);
 //    printf("resumed %d\n", tid);
     // no thread with ID tid exist or trying to block the main thread:
-    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+    if ((threadsDic.find(tid) == threadsDic.end()) || (tid == 0)) {
         return FAILURE;
     }
     if (threadsDic[tid]->getState() == BLOCKED_SYNCED) {
@@ -440,7 +441,7 @@ int uthread_sync(int tid){
     sigvtalrmMask(SIG_SETMASK);
 
     // no thread with ID tid exist or trying to sync the main thread:
-    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+    if ((threadsDic.find(tid) == threadsDic.end()) || (tid == 0)) {
         return FAILURE;
     }
 

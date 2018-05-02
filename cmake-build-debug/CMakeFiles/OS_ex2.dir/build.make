@@ -81,28 +81,28 @@ CMakeFiles/OS_ex2.dir/main.cpp.o.provides: CMakeFiles/OS_ex2.dir/main.cpp.o.requ
 CMakeFiles/OS_ex2.dir/main.cpp.o.provides.build: CMakeFiles/OS_ex2.dir/main.cpp.o
 
 
-CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o: CMakeFiles/OS_ex2.dir/flags.make
-CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o: ../uthreads_test.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o -c /cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads_test.cpp
+CMakeFiles/OS_ex2.dir/uthreads.cpp.o: CMakeFiles/OS_ex2.dir/flags.make
+CMakeFiles/OS_ex2.dir/uthreads.cpp.o: ../uthreads.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/OS_ex2.dir/uthreads.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OS_ex2.dir/uthreads.cpp.o -c /cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.cpp
 
-CMakeFiles/OS_ex2.dir/uthreads_test.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OS_ex2.dir/uthreads_test.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads_test.cpp > CMakeFiles/OS_ex2.dir/uthreads_test.cpp.i
+CMakeFiles/OS_ex2.dir/uthreads.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OS_ex2.dir/uthreads.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.cpp > CMakeFiles/OS_ex2.dir/uthreads.cpp.i
 
-CMakeFiles/OS_ex2.dir/uthreads_test.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OS_ex2.dir/uthreads_test.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads_test.cpp -o CMakeFiles/OS_ex2.dir/uthreads_test.cpp.s
+CMakeFiles/OS_ex2.dir/uthreads.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OS_ex2.dir/uthreads.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.cpp -o CMakeFiles/OS_ex2.dir/uthreads.cpp.s
 
-CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o.requires:
+CMakeFiles/OS_ex2.dir/uthreads.cpp.o.requires:
 
-.PHONY : CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o.requires
+.PHONY : CMakeFiles/OS_ex2.dir/uthreads.cpp.o.requires
 
-CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o.provides: CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o.requires
-	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o.provides.build
-.PHONY : CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o.provides
+CMakeFiles/OS_ex2.dir/uthreads.cpp.o.provides: CMakeFiles/OS_ex2.dir/uthreads.cpp.o.requires
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/uthreads.cpp.o.provides.build
+.PHONY : CMakeFiles/OS_ex2.dir/uthreads.cpp.o.provides
 
-CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o.provides.build: CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o
+CMakeFiles/OS_ex2.dir/uthreads.cpp.o.provides.build: CMakeFiles/OS_ex2.dir/uthreads.cpp.o
 
 
 CMakeFiles/OS_ex2.dir/Thread.cpp.o: CMakeFiles/OS_ex2.dir/flags.make
@@ -132,14 +132,14 @@ CMakeFiles/OS_ex2.dir/Thread.cpp.o.provides.build: CMakeFiles/OS_ex2.dir/Thread.
 # Object files for target OS_ex2
 OS_ex2_OBJECTS = \
 "CMakeFiles/OS_ex2.dir/main.cpp.o" \
-"CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o" \
+"CMakeFiles/OS_ex2.dir/uthreads.cpp.o" \
 "CMakeFiles/OS_ex2.dir/Thread.cpp.o"
 
 # External object files for target OS_ex2
 OS_ex2_EXTERNAL_OBJECTS =
 
 OS_ex2: CMakeFiles/OS_ex2.dir/main.cpp.o
-OS_ex2: CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o
+OS_ex2: CMakeFiles/OS_ex2.dir/uthreads.cpp.o
 OS_ex2: CMakeFiles/OS_ex2.dir/Thread.cpp.o
 OS_ex2: CMakeFiles/OS_ex2.dir/build.make
 OS_ex2: CMakeFiles/OS_ex2.dir/link.txt
@@ -152,7 +152,7 @@ CMakeFiles/OS_ex2.dir/build: OS_ex2
 .PHONY : CMakeFiles/OS_ex2.dir/build
 
 CMakeFiles/OS_ex2.dir/requires: CMakeFiles/OS_ex2.dir/main.cpp.o.requires
-CMakeFiles/OS_ex2.dir/requires: CMakeFiles/OS_ex2.dir/uthreads_test.cpp.o.requires
+CMakeFiles/OS_ex2.dir/requires: CMakeFiles/OS_ex2.dir/uthreads.cpp.o.requires
 CMakeFiles/OS_ex2.dir/requires: CMakeFiles/OS_ex2.dir/Thread.cpp.o.requires
 
 .PHONY : CMakeFiles/OS_ex2.dir/requires

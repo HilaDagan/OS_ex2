@@ -33,12 +33,12 @@ sys/time.h
 /cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/main.cpp
 iostream
 -
+zconf.h
+-
 uthreads.h
 /cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.h
 
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.h
-
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads_test.cpp
+/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.cpp
 uthreads.h
 /cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.h
 Thread.h
@@ -49,4 +49,6 @@ map
 -
 iostream
 -
+
+/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.h
 

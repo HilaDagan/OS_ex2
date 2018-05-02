@@ -56,9 +56,12 @@ void sigvtalrmMask(int how){
 void getNextThread() {
     sigvtalrmMask(SIG_BLOCK);
 
+    printf("READY LIST FROM getNextThread(): \n");
+
     std::list<int>::iterator it;
     for (it = readyThreads.begin(); it != readyThreads.end(); ++it) {
-        std::cout << *it << std::endl;
+        printf("%d\n",*it);
+//        std::cout << *it << std::endl;qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
     }
 
 
@@ -251,11 +254,14 @@ int uthread_spawn(void (*f)(void)){
     if (newId != 0) { //not the main thread
         readyThreads.push_back(newId); // add the new thread to the end of the READY threads list.
     }
+    printf("READY LIST FROM uthread_spawn(): \n");
     std::list<int>::iterator it;
     for (it = readyThreads.begin(); it != readyThreads.end(); ++it) {
-        std::cout << *it << std::endl;
+        printf("%d\n",*it);
+//        std::cout << *it << std::endl;
 
     }
+
     sigvtalrmMask(SIG_UNBLOCK);
     return newId;
 }
@@ -324,11 +330,12 @@ int uthread_terminate(int tid){ //todo
         return FAILURE;
     }
     if (tid == MAIN_THREAD_ID) { // terminating the main thread
-        //todo: releasing the assigned library memory - all the exciting threads in the dic!
+        // releasing the assigned library memory - all the exciting threads in the dic:
         std::map<int, Thread*>::iterator it;
 
         for (it = threadsDic.begin(); it != threadsDic.end(); it++ )
         {
+            printf("terminated program: %d\n", it->second->getId());
             delete it->second;
             threadsDic.erase(it);
 
@@ -392,11 +399,11 @@ int uthread_block(int tid) {
     sigvtalrmMask(SIG_SETMASK);
 
     // no thread with ID tid exist or trying to block the main thread:
-    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+    if ((threadsDic.find(tid) == threadsDic.end()) || (tid == MAIN_THREAD_ID)) {
         return FAILURE;
     }
 
-    if (threadsDic[tid]->getState() != BLOCKED and threadsDic[tid]->getState() != BLOCKED_SYNCED)
+    if (threadsDic[tid]->getState() != BLOCKED && threadsDic[tid]->getState() != BLOCKED_SYNCED)
     {
         if (threadsDic[tid]->getState() == SYNCED) {
             printf("blocked synced %d\n", tid);
@@ -435,9 +442,9 @@ int uthread_block(int tid) {
 int uthread_resume(int tid)
 {
     sigvtalrmMask(SIG_SETMASK);
-    printf("resumed %d\n", tid);
+//    printf("resumed %d\n", tid);
     // no thread with ID tid exist or trying to block the main thread:
-    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+    if ((threadsDic.find(tid) == threadsDic.end()) || (tid == 0)) {
         return FAILURE;
     }
     if (threadsDic[tid]->getState() == BLOCKED_SYNCED) {
@@ -466,8 +473,9 @@ int uthread_resume(int tid)
 int uthread_sync(int tid){
     sigvtalrmMask(SIG_SETMASK);
 
-    // no thread with ID tid exist or trying to sync the main thread:
-    if ((threadsDic.find(tid) == threadsDic.end()) or (tid == 0)) {
+    // no thread with ID tid exist or trying to sync the main thread or a thread try to sync itself:
+    if ((threadsDic.find(tid) == threadsDic.end()) || (curRunningId == 0) || (tid == curRunningId) ) {
+//    if ((threadsDic.find(tid) == threadsDic.end()) || (tid == 0)) {
         return FAILURE;
     }
 
@@ -521,9 +529,9 @@ int uthread_get_quantums(int tid){
     if ((threadsDic.find(tid) == threadsDic.end())) {
         return FAILURE;
     }
-    if (tid == 0) {
-        return 1; // todo - is ok?? because it is not in the dict.
-    }
+//    if (tid == 0) {
+//        return 1; // todo - is ok?? because it is not in the dict.
+//    }
     sigvtalrmMask(SIG_UNBLOCK);
     return threadsDic[tid]->getQuantums();
 }

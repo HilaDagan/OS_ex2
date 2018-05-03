@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 #set(SOURCE_FILES main.cpp Thread.cpp)
 #set(SOURCE_FILES main.cpp uthreads.cpp Thread.cpp)
-#set(SOURCE_FILES test132.cpp uthreads_test.cpp Thread.cpp)
+#set(SOURCE_FILES test1.cpp uthreads.cpp Thread.cpp)
 set(SOURCE_FILES main.cpp uthreads.cpp Thread.cpp)
 #set(SOURCE_FILES demo_jmp.c)
 #set(SOURCE_FILES demo_itimer.c)

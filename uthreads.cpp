@@ -1,20 +1,16 @@
-//
-// Created by dan.kovalsky on 4/30/18.
-//
-
-// uthread.h
 /*
  * User-Level Threads Library (uthreads)
  */
+
 #include "uthreads.h"
 #include "Thread.h"
-#include <algorithm> // todo - is ok?
+#include <algorithm>
 #include <map>
 #include <iostream>
 
 
 /* Containers */
-static std::map<int, Thread*> threadsDic; // contain all the existing threads.// todo - include the main?
+static std::map<int, Thread*> threadsDic; // contain all the existing threads.
 // the current number of threads in the size of the dic + 1 (for the main thread)
 static std::list<int> blockedThreads; // contain all threads id that are currently
 // blocked, OR blocked and synced.
@@ -37,7 +33,7 @@ static const int SUCCESS = 0; // represent success return value from function or
 //int timerExpired = 0; // if the value is 1, the quantum is over.
 struct itimerval timer;
 
-void getNextThread();
+void sigvtalrmMask(int);
 
 static int curRunningId; //The thread ID of the current running thread;
 sigset_t set;
@@ -60,17 +56,17 @@ static const char *LIB_ERR_INVALID_INPUT = "thread library error: invalid input\
 
 static const char *LIB_ERR_MAX_THREAD = "thread library error: too many threads\n";
 
-
-
 /**
  * Free all the memory allocated by the program.
  * @param exitVal - the value of exit code.
  */
 void freeMemory(int exitVal) {
+//    sigvtalrmMask(SIG_SETMASK);  //TODO DONT HAve efaect
 
 //    try {
     std::map<int, Thread *>::iterator it;
     for (it = ++threadsDic.begin(); it != threadsDic.end(); it++) {
+        printf("terminate in loop %d\n", it->first);
         delete it->second;
 //        threadsDic.erase(it);
     }
@@ -79,41 +75,35 @@ void freeMemory(int exitVal) {
 //        fprintf(stderr, ERR_BAD_DELETE);
 //    }
 //    threadsDic.erase(MAIN_THREAD_ID);
-//
-//    threadsDic.clear();
-//    readyThreads.clear();
-//    blockedThreads.clear();
-//    unusedId.clear();
+
+    sigvtalrmMask(SIG_UNBLOCK);
     exit(exitVal);
 }
 
-
-
 /**
- * Block the signal SIGALRM.
+ * Block the signal SIGVTALRM.
  */
 void sigvtalrmMask(int how) {
-//    Thread* curThread = threadsDic[curRunningId];
     if (sigemptyset(&set)) {
         fprintf(stderr, ERR_EMPTY_SET);
-        freeMemory(SYSTEM_ERROR_EXIT);
+//        freeMemory(SYSTEM_ERROR_EXIT); // TODO - Dan say to add
     }
     if (sigaddset(&set, SIGVTALRM)) {
         fprintf(stderr, ERR_ADD_SET);
-        freeMemory(SYSTEM_ERROR_EXIT);
+//        freeMemory(SYSTEM_ERROR_EXIT);
     }
     if (sigprocmask(how, &set, nullptr)) {
         fprintf(stderr, ERR_SET_TIMER);
-        freeMemory(SYSTEM_ERROR_EXIT);
+//        freeMemory(SYSTEM_ERROR_EXIT);
     }
 }
+
+
 
 /**
  * Move the next thread in the list of READY threads to RUNNING state.
  */
-void getNextThread() {
-    sigvtalrmMask(SIG_BLOCK);
-
+void findNextThread() {
 //    printf("READYLIST before swich\n");
 //    std::list<int>::iterator it; // todo - print of ready
 //    for (it = readyThreads.begin(); it != readyThreads.end(); ++it) {
@@ -122,11 +112,10 @@ void getNextThread() {
 
     int nextId = readyThreads.front();
     readyThreads.pop_front();
-//    printf("next id=%d\n", nextId);
     threadsDic[nextId]->setState(RUNNING);
     curRunningId = nextId;
     Thread *curThread = threadsDic[curRunningId];
-    printf("------------------------\n");
+//    printf("------------------------\n");
 
     curThread->increasQuantums();
     if (setitimer(ITIMER_VIRTUAL, &(timer), nullptr)) {
@@ -134,7 +123,6 @@ void getNextThread() {
         freeMemory(SYSTEM_ERROR_EXIT);
     }
     totalQuantum++;
-    sigvtalrmMask(SIG_UNBLOCK);
     siglongjmp((curThread->_env), (curRunningId + 1));
 }
 
@@ -146,19 +134,14 @@ void getNextThread() {
  * The input to the function is the length of a quantum in micro-seconds.
  */
 void scheduler() {
-    sigvtalrmMask(SIG_BLOCK);
-
-
     Thread *curThread = threadsDic[curRunningId];
-    int ret_val = sigsetjmp((curThread->_env), 1);
-//    printf("SWITCH: ret_val=%d\n", ret_val);
-    //TODO TODOTODOTODOTODOTODOTODOTODOTODOTODO ERRORS CHECK??
-    if (ret_val != 0) {  // means that we restore the thread env' and not save it.  we return from siglongjmp
-//    if (ret_val == (curThread->getId())) {  // means that we restore the thread env' and not save it.
+    int ret_val = sigsetjmp((curThread->_env), 1); //TODO ERRORS CHECK??
+
+    printf("SWITCH: ret_val=%d\n", ret_val);
+    if (ret_val != 0) {  // means that we want to restore the thread env' (and not save it).
         return;
     }
-    getNextThread();
-    sigvtalrmMask(SIG_UNBLOCK);
+    findNextThread();
 }
 
 
@@ -166,7 +149,7 @@ void scheduler() {
  * Handle SIGVTALRM.
  */
 void switchThreads(int sig) {
-    sigvtalrmMask(SIG_BLOCK);
+    sigvtalrmMask(SIG_SETMASK);
     Thread *curThread = threadsDic[curRunningId];
 
     // Move the thread to the READY state and place it at
@@ -178,10 +161,11 @@ void switchThreads(int sig) {
     sigvtalrmMask(SIG_UNBLOCK);
 }
 
-
+/**
+ * Set up the timer object according to the user's input, and start a new quantum.
+ * @param quantum - the length of a quantum in micro-seconds.
+ */
 void setupTimer(int quantum) {
-    sigvtalrmMask(SIG_BLOCK);
-
     // Install switchThreads as the signal handler for SIGVTALRM.
     sa.sa_handler = &switchThreads;
     if (sigaction(SIGVTALRM, &sa, nullptr) < 0) {
@@ -193,6 +177,8 @@ void setupTimer(int quantum) {
     timer.it_value.tv_sec = quantum / 1000000;  // first time interval, seconds part
     timer.it_value.tv_usec = quantum % 1000000;  // first time interval, microseconds part
 
+    totalQuantum++;
+
     // Start a virtual timer. It counts down whenever this process is executing.
     // ITIMER_VIRTUAL decrements only when the process is executing,
     // and delivers SIGVTALRM upon expiration.
@@ -200,8 +186,6 @@ void setupTimer(int quantum) {
         fprintf(stderr, ERR_SET_TIMER);
         freeMemory(SYSTEM_ERROR_EXIT);
     }
-    totalQuantum++;
-    sigvtalrmMask(SIG_UNBLOCK);
 }
 
 
@@ -214,25 +198,31 @@ void setupTimer(int quantum) {
  * Return value: On success, return 0. On failure, return -1.
 */
 int uthread_init(int quantum_usecs) {
-    sigvtalrmMask(SIG_BLOCK);
+    sigvtalrmMask(SIG_SETMASK);
     if (quantum_usecs <= 0) {
         fprintf(stderr, LIB_ERR_INVALID_INPUT);
         return FAILURE;
     }
-//    quantum = quantum_usecs;
     totalQuantum = 0;  // only the current quantum.
-    curRunningId = MAIN_THREAD_ID;  // the main thread.
     idCounter = 0;  // 0 is used by the main thread.
-    int mainId = uthread_spawn(nullptr); // create the main thread.
+    curRunningId = MAIN_THREAD_ID;  // the main thread.
+    int mainId = uthread_spawn(nullptr);  // create the main thread.
+    sigvtalrmMask(SIG_SETMASK);  // block again after spawn
+
     threadsDic[mainId]->setState(RUNNING);
     threadsDic[mainId]->increasQuantums();
-
     setupTimer(quantum_usecs);  // set the timer.
 
-    //todo - the first signal can be sent only now, right?
-    //TODO TODOTODOTODOTODOTODOTODOTODOTODOTODO ERRORS CHECK??
-    sigsetjmp((threadsDic[mainId]->_env), 1);
-    sigvtalrmMask(SIG_UNBLOCK); //todo - ok?
+    sigsetjmp((threadsDic[mainId]->_env), 1);  //TODO ERRORS CHECK??
+
+    printf("Before Usleep\n");
+    for (int i = 0; i < 999999999; ++i) {
+        for (int j = 0; j < 3; ++j) {
+        }
+    }
+    printf("after Usleep\n");
+
+    sigvtalrmMask(SIG_UNBLOCK);
     return SUCCESS;
 }
 
@@ -243,7 +233,6 @@ int uthread_init(int quantum_usecs) {
  */
 int findId()
 {
-    sigvtalrmMask(SIG_BLOCK);
     int newId;
     if (unusedId.empty()) {
         newId = idCounter;
@@ -259,7 +248,6 @@ int findId()
         newId = *minId;
         unusedId.erase(minId);
     }
-    sigvtalrmMask(SIG_UNBLOCK);
     return newId;
 }
 
@@ -295,7 +283,6 @@ int uthread_spawn(void (*f)(void)) {
         fprintf(stderr, ERR_BAD_ALLOC);
         freeMemory(SYSTEM_ERROR_EXIT);
     }
-
 //    std::list<int>::iterator it; // todo - print of ready
 //    for (it = readyThreads.begin(); it != readyThreads.end(); ++it) {
 //        std::cout << *it << std::endl;
@@ -310,8 +297,6 @@ int uthread_spawn(void (*f)(void)) {
  * Remove the given terminated thread from the dependencies lists of other threads.
  */
 void removeFromDependencyList(const Thread *deadThread, const int id) {
-    sigvtalrmMask(SIG_SETMASK);
-
     // If the dead thread was dependent in other thread, remove it from the dependency list
     // of that thread:
     if (deadThread->getDependentIn() != NOT_DEPENDENT) {
@@ -335,17 +320,14 @@ void removeFromDependencyList(const Thread *deadThread, const int id) {
 
         }
     }
-    sigvtalrmMask(SIG_UNBLOCK);
-
 }
-
 
 
 /*
  * Description: This function terminates the thread with ID tid and deletes
  * it from all relevant control structures. All the resources allocated by
  * the library for this thread should be released. If no thread with ID tid
- * exists it is considered as an error. Terminating the main thread
+ * exists it is considered an error. Terminating the main thread
  * (tid == 0) will result in the termination of the entire process using
  * exit(0) [after releasing the assigned library memory].
  * Return value: The function returns 0 if the thread was successfully
@@ -361,10 +343,9 @@ int uthread_terminate(int tid) {
         return FAILURE;
     }
     if (tid == MAIN_THREAD_ID) { // terminating the main thread
-        //todo: releasing the assigned library memory - all the exciting threads in the dic!
+        //releasing the assigned library memory, all the existing threads in the dic.
         freeMemory(SUCCESS);
     }
-
 
     Thread *threadToTerminate = threadsDic[tid];
     ThreadState tstate = threadToTerminate->getState();
@@ -388,14 +369,10 @@ int uthread_terminate(int tid) {
         for (ttr = threadsDic.begin(); ttr != threadsDic.end(); ++ttr) {
             printf("in dic: %d\n", ttr->first);
         }
-
-
     } catch (...) { // TODO - IS OK? ...
         fprintf(stderr, ERR_BAD_DELETE);
         freeMemory(SYSTEM_ERROR_EXIT);
     }
-
-
 
 //    std::map<int, Thread*>::iterator it;
 //
@@ -408,7 +385,8 @@ int uthread_terminate(int tid) {
 //    }
 
     if (tid == curRunningId) {  // a thread terminates itself
-        getNextThread(); //todo - not return
+        sigvtalrmMask(SIG_UNBLOCK);
+        findNextThread();
     }
     sigvtalrmMask(SIG_UNBLOCK);
     return SUCCESS;
@@ -426,7 +404,6 @@ int uthread_terminate(int tid) {
 */
 int uthread_block(int tid) {
     sigvtalrmMask(SIG_SETMASK);
-
     // no thread with ID tid exist or trying to block the main thread:
     if ((threadsDic.find(tid) == threadsDic.end()) || (tid == MAIN_THREAD_ID)) {
         fprintf(stderr, LIB_ERR_INVALID_INPUT);
@@ -452,10 +429,6 @@ int uthread_block(int tid) {
 //            printf("blocked myself");
             scheduler();
         }
-//          else {
-//            printf("blocked %d\n", tid);
-
-//        }
     }
     sigvtalrmMask(SIG_UNBLOCK);
     return SUCCESS;

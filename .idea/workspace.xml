@@ -12,39 +12,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38e82878-a27f-4f83-a01d-bbdf721546ea" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.3/CMakeCCompiler.cmake" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.3/CMakeCXXCompiler.cmake" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.3/CMakeDetermineCompilerABI_C.bin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.3/CMakeDetermineCompilerABI_CXX.bin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.3/CMakeSystem.cmake" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.3/CompilerIdC/CMakeCCompilerId.c" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.3/CompilerIdC/a.out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.3/CompilerIdCXX/a.out" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/Thread.cpp.o" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/Thread.cpp.o" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/demo_itimer.c" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/demo_jmp.c" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/demo_singInt_handler.c" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/uthreads_test.cpp" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/main.cpp.o" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/main.cpp.o" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/uthreads.cpp.o" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/uthreads.cpp.o" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/OS_ex2" afterPath="$PROJECT_DIR$/cmake-build-debug/OS_ex2" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/CXX.includecache" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/CXX.includecache" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/DependInfo.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/DependInfo.cmake" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/build.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/build.make" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/depend.internal" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/depend.internal" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/depend.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/depend.make" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/flags.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/OS_ex2.dir/flags.make" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/OS_ex2.cbp" afterPath="$PROJECT_DIR$/cmake-build-debug/OS_ex2.cbp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uthreads.cpp" afterPath="$PROJECT_DIR$/uthreads.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uthreads.h" afterPath="$PROJECT_DIR$/uthreads.h" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,17 +34,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.32803297">
+    <splitter split-orientation="horizontal" split-proportion="0.6419317">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/main.cpp">
+          <file leaf-file-name="README" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/README">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="300">
-                  <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#19#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="272">
+                  <caret line="16" column="41" lean-forward="false" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -73,10 +50,78 @@
           <file leaf-file-name="Thread.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Thread.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="382">
+                <state relative-caret-position="186">
                   <caret line="124" column="28" lean-forward="false" selection-start-line="124" selection-start-column="13" selection-end-line="124" selection-end-column="28" />
                   <folding>
                     <element signature="e#15#32#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="uthreads.cpp" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/uthreads.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1343">
+                  <caret line="79" column="9" lean-forward="false" selection-start-line="79" selection-start-column="4" selection-end-line="79" selection-end-column="9" />
+                  <folding>
+                    <element signature="e#49#70#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="sync_test.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/sync_test.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="476">
+                  <caret line="29" column="18" lean-forward="false" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="tester.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/tester.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-1020">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#0#21#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="nadavTests.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/nadavTests.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1156">
+                  <caret line="68" column="18" lean-forward="false" selection-start-line="68" selection-start-column="18" selection-end-line="68" selection-end-column="18" />
+                  <folding>
+                    <element signature="e#0#19#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="uthreads.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/uthreads.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-600">
+                  <caret line="8" column="24" lean-forward="false" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/main.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="704">
+                  <caret line="220" column="23" lean-forward="false" selection-start-line="220" selection-start-column="23" selection-end-line="220" selection-end-column="23" />
+                  <folding>
+                    <element signature="e#0#19#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -89,18 +134,18 @@
           <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="153">
-                  <caret line="9" column="29" lean-forward="false" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+                <state relative-caret-position="408">
+                  <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="uthreads.cpp" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/uthreads.cpp">
+          <file leaf-file-name="Makefile" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Makefile">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="686">
-                  <caret line="561" column="5" lean-forward="false" selection-start-line="561" selection-start-column="5" selection-end-line="561" selection-end-column="5" />
+                <state relative-caret-position="476">
+                  <caret line="28" column="62" lean-forward="false" selection-start-line="28" selection-start-column="62" selection-end-line="28" selection-end-column="62" />
                   <folding />
                 </state>
               </provider>
@@ -112,36 +157,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getNextThread</find>
-      <find>scheduler</find>
-      <find>BLOCKED_SYNCED</find>
-      <find>find_id</find>
-      <find>halt</find>
-      <find>findId</find>
-      <find>increasQuantums</find>
-      <find>print</find>
-      <find>&lt;&lt;</find>
-      <find>itt</find>
-      <find>it</find>
-      <find>std::cout</find>
-      <find>locked myse</find>
-      <find>S SYNC SUCESS?</find>
-      <find>and</find>
-      <find>after</find>
-      <find>resumed</find>
       <find>sync</find>
       <find>sigvtalrmMask</find>
       <find>LIBOBJ</find>
       <find>or</find>
-      <find>freeMemory</find>
       <find>totalQuantum</find>
       <find>read</find>
       <find>printf</find>
       <find>pri</find>
       <find>new</find>
-      <find>new</find>
       <find>deler</find>
       <find>deleTE</find>
+      <find>----</find>
+      <find>termin</find>
+      <find>SIGALRM</find>
+      <find>---</find>
+      <find>uslee</find>
+      <find>init</find>
+      <find>freeMemory</find>
+      <find>getNextThread</find>
+      <find>uthread_get_quantums</find>
+      <find>uthread_get_total_quantums</find>
+      <find>uthread_get_tid</find>
+      <find>uthread_resume</find>
+      <find>uthread_block</find>
+      <find>uthread_terminate</find>
+      <find>removeFromDependencyList</find>
+      <find>uthread_spawn</find>
+      <find>findId</find>
+      <find>uthread_init</find>
+      <find>switchThreads</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -153,11 +198,15 @@
         <option value="$PROJECT_DIR$/demo_itimer.c" />
         <option value="$PROJECT_DIR$/Thread.h" />
         <option value="$PROJECT_DIR$/Thread.cpp" />
-        <option value="$PROJECT_DIR$/../jona test/test1.cpp" />
         <option value="$PROJECT_DIR$/test2.cpp" />
         <option value="$PROJECT_DIR$/uthreads_test.cpp" />
         <option value="$PROJECT_DIR$/test5.cpp" />
+        <option value="$PROJECT_DIR$/../jona test/test1.cpp" />
+        <option value="$PROJECT_DIR$/test1.cpp" />
+        <option value="$PROJECT_DIR$/uthreads.h" />
         <option value="$PROJECT_DIR$/Makefile" />
+        <option value="$PROJECT_DIR$/sync_test.cpp" />
+        <option value="$PROJECT_DIR$/README" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/main.cpp" />
         <option value="$PROJECT_DIR$/uthreads.cpp" />
@@ -175,10 +224,9 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="67" />
-    <option name="y" value="-4" />
-    <option name="width" value="1299" />
-    <option name="height" value="772" />
+    <option name="y" value="24" />
+    <option name="width" value="960" />
+    <option name="height" value="1032" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -257,7 +305,7 @@
       <workItem from="1525254334295" duration="27527000" />
       <workItem from="1525291649224" duration="7000" />
       <workItem from="1525291679812" duration="5109000" />
-      <workItem from="1525327205172" duration="2920000" />
+      <workItem from="1525327205172" duration="17908000" />
     </task>
     <task id="LOCAL-00001" summary="test changed">
       <created>1525102887836</created>
@@ -308,26 +356,33 @@
       <option name="project" value="LOCAL" />
       <updated>1525257940632</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="functions are ok.">
+      <created>1525330154358</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1525330154358</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="111340000" />
+    <option name="totallyTimeSpent" value="126328000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="-4" width="1928" height="1035" extended-state="6" />
+    <frame x="-4" y="24" width="1928" height="1035" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.115625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28265524" sideWeight="0.42395833" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2815846" sideWeight="0.42395833" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46573874" sideWeight="0.5776042" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2955032" sideWeight="0.42239583" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19914347" sideWeight="0.42239583" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41541755" sideWeight="0.49791667" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28479657" sideWeight="0.49791667" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -345,9 +400,9 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.46573874" sideWeight="0.5776042" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46573874" sideWeight="0.5776042" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.46573874" sideWeight="0.42239583" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2955032" sideWeight="0.42239583" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.115625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -373,43 +428,19 @@
     <MESSAGE value="SYNCED almost work!" />
     <MESSAGE value="SYNCED also work!" />
     <MESSAGE value="id correct." />
-    <option name="LAST_COMMIT_MESSAGE" value="id correct." />
+    <MESSAGE value="functions are ok." />
+    <option name="LAST_COMMIT_MESSAGE" value="functions are ok." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/demo_itimer.c</url>
+          <url>file://$PROJECT_DIR$/main.cpp</url>
           <line>31</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/demo_itimer.c</url>
-          <line>65</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/uthreads_test.cpp</url>
-          <line>443</line>
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/../jona test/test1.cpp</url>
-          <line>66</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/uthreads_test.cpp</url>
-          <line>526</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/uthreads_test.cpp</url>
-          <line>260</line>
-          <option name="timeStamp" value="44" />
+          <option name="timeStamp" value="50" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="46" />
+      <option name="time" value="55" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
@@ -423,45 +454,13 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Thread.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="10" lean-forward="false" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
-          <folding>
-            <element signature="e#15#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Thread.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2601">
-          <caret line="153" column="28" lean-forward="false" selection-start-line="153" selection-start-column="28" selection-end-line="153" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uthreads.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4760">
           <caret line="280" column="0" lean-forward="false" selection-start-line="280" selection-start-column="0" selection-end-line="280" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#49#70#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -512,7 +511,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4267">
           <caret line="251" column="63" lean-forward="false" selection-start-line="251" selection-start-column="60" selection-end-line="251" selection-end-column="63" />
-          <folding />
+          <folding>
+            <element signature="e#49#70#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -547,21 +548,11 @@
     <entry file="file:///usr/include/c++/6/bits/stl_tree.h" />
     <entry file="file://$PROJECT_DIR$/demo_itimer.c" />
     <entry file="file://$USER_HOME$/.cache/.fr-djLPi0/sync_test.cpp" />
-    <entry file="file://$PROJECT_DIR$/sync_test.cpp" />
-    <entry file="file://$PROJECT_DIR$/README" />
-    <entry file="file://$PROJECT_DIR$/../jona test/test1.cpp" />
     <entry file="file://$PROJECT_DIR$/test5.cpp" />
     <entry file="file://$PROJECT_DIR$/test2.cpp" />
     <entry file="file://$PROJECT_DIR$/test42.cpp" />
     <entry file="file://$PROJECT_DIR$/test132.cpp" />
     <entry file="file://$PROJECT_DIR$/test429.cpp" />
-    <entry file="file://$PROJECT_DIR$/uthreads.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="34" column="4" lean-forward="false" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Thread.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="139">
@@ -579,15 +570,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test1.cpp" />
-    <entry file="file://$PROJECT_DIR$/Makefile" />
     <entry file="file://$PROJECT_DIR$/maindan.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-816">
           <caret line="30" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="223" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#19#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -599,9 +586,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../jona test/test1.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="721">
+          <caret line="86" column="25" lean-forward="true" selection-start-line="86" selection-start-column="25" selection-end-line="86" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test1.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-34">
+          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="11" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sync_test.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="29" column="18" lean-forward="false" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tester.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1020">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nadavTests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1156">
+          <caret line="68" column="18" lean-forward="false" selection-start-line="68" selection-start-column="18" selection-end-line="68" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="41" lean-forward="false" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Thread.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
+        <state relative-caret-position="186">
           <caret line="124" column="28" lean-forward="false" selection-start-line="124" selection-start-column="13" selection-end-line="124" selection-end-column="28" />
           <folding>
             <element signature="e#15#32#0" expanded="true" />
@@ -609,18 +648,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file:///usr/include/x86_64-linux-gnu/bits/sigaction.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="77" column="8" lean-forward="false" selection-start-line="77" selection-start-column="8" selection-end-line="77" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="29" lean-forward="false" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+        <state relative-caret-position="408">
+          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="28" column="62" lean-forward="false" selection-start-line="28" selection-start-column="62" selection-end-line="28" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/stdlib.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="503" column="12" lean-forward="false" selection-start-line="503" selection-start-column="12" selection-end-line="503" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uthreads.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-600">
+          <caret line="8" column="24" lean-forward="false" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
+        <state relative-caret-position="704">
+          <caret line="220" column="23" lean-forward="false" selection-start-line="220" selection-start-column="23" selection-end-line="220" selection-end-column="23" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
@@ -629,9 +700,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/uthreads.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="686">
-          <caret line="561" column="5" lean-forward="false" selection-start-line="561" selection-start-column="5" selection-end-line="561" selection-end-column="5" />
-          <folding />
+        <state relative-caret-position="1343">
+          <caret line="79" column="9" lean-forward="false" selection-start-line="79" selection-start-column="4" selection-end-line="79" selection-end-column="9" />
+          <folding>
+            <element signature="e#49#70#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

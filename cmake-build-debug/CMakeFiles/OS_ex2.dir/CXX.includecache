@@ -6,19 +6,19 @@
 
 #IncludeRegexTransform: 
 
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/Thread.cpp
+/home/dan/Documents/OSProjects/OS_ex2/Thread.cpp
 cstdio
 -
 Thread.h
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/Thread.h
+/home/dan/Documents/OSProjects/OS_ex2/Thread.h
 
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/Thread.h
+/home/dan/Documents/OSProjects/OS_ex2/Thread.h
 vector
 -
 list
 -
 uthreads.h
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.h
+/home/dan/Documents/OSProjects/OS_ex2/uthreads.h
 cstdio
 -
 csetjmp
@@ -30,19 +30,19 @@ unistd.h
 sys/time.h
 -
 
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/main.cpp
+/home/dan/Documents/OSProjects/OS_ex2/main.cpp
 iostream
 -
 zconf.h
 -
 uthreads.h
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.h
+/home/dan/Documents/OSProjects/OS_ex2/uthreads.h
 
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.cpp
+/home/dan/Documents/OSProjects/OS_ex2/uthreads.cpp
 uthreads.h
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.h
+/home/dan/Documents/OSProjects/OS_ex2/uthreads.h
 Thread.h
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/Thread.h
+/home/dan/Documents/OSProjects/OS_ex2/Thread.h
 algorithm
 -
 map
@@ -50,5 +50,5 @@ map
 iostream
 -
 
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.h
+/home/dan/Documents/OSProjects/OS_ex2/uthreads.h
 

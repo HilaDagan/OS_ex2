@@ -96,33 +96,60 @@ void f3(){
 
 void thread_block_myself()
 {
+    printf("enter thread_block_myself()\n");
+
     uthread_block(uthread_get_tid());
 }
 
 void threadhalt()
 {
-    printf("DDDD\n");
+//    printf("enter threadhalt()\n");
+//    printf("Current Quantum  of Threac %d   is   %d\n",uthread_get_tid(),uthread_get_quantums(uthread_get_tid()));
+//    printf("Current total Quantum in threadhalt()  %d\n",uthread_get_total_quantums());
+
     while (true)
     {}
 }
 
-int main()
-
+void threadHalt10(int curTotalQuantum)
 {
-//    uthread_init(100);
-//
-//    thread1 = uthread_spawn(threadhalt);
-//    thread2 = uthread_spawn(threadhalt);
-//    thread3 = uthread_spawn(threadhalt);
-//    thread4 = uthread_spawn(threadhalt);
-//    thread5 = uthread_spawn(threadhalt);
-//    thread6 = uthread_spawn(threadhalt);
-//    thread7 = uthread_spawn(threadhalt);
-//
-//    while(true){
-////        usleep(400000);
-////        printf("%d\n",uthread_get_total_quantums());
-//    }
+//    printf("enter threadhalt()\n");
+//    printf("Current Quantum  of Threac %d   is   %d\n",uthread_get_tid(),uthread_get_quantums(uthread_get_tid()));
+//    printf("Current total Quantum in threadhalt()  %d\n",uthread_get_total_quantums());
+
+    while (uthread_get_total_quantums() < curTotalQuantum + 10)
+    {}
+}
+
+void waitQuantum(int curTotalQuantum){
+    while(uthread_get_total_quantums()==curTotalQuantum){
+
+    }
+}
+
+int main() {
+    uthread_init(500000);
+    threadHalt10(uthread_get_total_quantums());
+
+    thread1 = uthread_spawn(threadhalt);
+    waitQuantum(uthread_get_total_quantums());
+//    waitQuantum(uthread_get_total_quantums());
+//    waitQuantum(uthread_get_total_quantums());
+//    printf("Current total Quantum after waitQuantum()  %d\n",uthread_get_total_quantums());
+    thread2 = uthread_spawn(threadhalt);
+//    printf("Current total Quantum after waitQuantum()  %d\n",uthread_get_total_quantums());
+    thread3 = uthread_spawn(threadhalt);
+//    printf("Current total Quantum after waitQuantum()  %d\n",uthread_get_total_quantums());
+    thread4 = uthread_spawn(threadhalt);
+    thread5 = uthread_spawn(threadhalt);
+    thread6 = uthread_spawn(threadhalt);
+    thread7 = uthread_spawn(threadhalt);
+
+
+    while (true) {
+//        usleep(400000);
+//        printf("%d\n",uthread_get_total_quantums());
+    }
 
 //    uthread_terminate(thread1);
 //    uthread_terminate(thread2);
@@ -131,57 +158,66 @@ int main()
 //    uthread_terminate(thread5);
 //    uthread_terminate(thread6);
 //    uthread_terminate(thread7);
-//    uthread_terminate(0);
-//    return 0;
+    uthread_terminate(0);
+    return 0;
 
-//    std::cout << 32123456/1000000<<std::endl ;
-//    std::cout << 32123456%1000000<<std::endl ;
-
-//    printf("start\n");
-//
-//    uthread_init(30000);
-    uthread_init(1000000);
-    printf("main added\n");
-
-
-    thread1 = uthread_spawn(f1);
-    printf("added 1\n");
-
-
-
-    thread2 = uthread_spawn(f2);
-    printf("added 2\n");
-//
-//    thread3 = uthread_spawn(f3); //
-//    printf("added 3\n");
-//
-//    std::cout << "Hello, World!" << std::endl;
-    int w = 0;
-    for(;;){
-        w++;
-        if (w%100000000 == 0){
-//            printf("main thread\n");
-//            printf("Current Quantum  -  %d\n",uthread_get_total_quantums());
-            printf("Current Quantum  of Threac %d   is   %d\n",uthread_get_tid(),uthread_get_quantums(uthread_get_tid()));
-        }
-//        if (w == 100000000){ // todo - block test
-//            // 2 is also synced - and by 1. released here by the main thread.
-//            uthread_terminate(thread2);
-////            thread4 = uthread_spawn(f2);
-//            printf("added 4----------------------------------------------------------\n");
-////            printf("id = %d\n", thread4.get);
-////            uthread_terminate(thread1);
-////            break;
-//        }
-//
-//        if (w == 1000000000) { // stop the program
-            uthread_terminate(0);
-//            break;
-//        }
-    }
-    return 0; // exit the program - after creating the three threads - will not necessarily wait
-//    // until they finish their functions! there fore we need loop.
+    std::cout << 32123456 / 1000000 << std::endl;
+    std::cout << 32123456 % 1000000 << std::endl;
 }
+
+
+
+
+
+
+
+
+
+////    printf("start\n");
+////
+////    uthread_init(30000);
+//    uthread_init(1000000);
+//    printf("main added\n");
+//
+//
+//    thread1 = uthread_spawn(f1);
+//    printf("added 1\n");
+//
+//
+//
+//    thread2 = uthread_spawn(f2);
+//    printf("added 2\n");
+////
+////    thread3 = uthread_spawn(f3); //
+////    printf("added 3\n");
+////
+////    std::cout << "Hello, World!" << std::endl;
+//    int w = 0;
+//    for(;;){
+//        w++;
+//        if (w%100000000 == 0){
+////            printf("main thread\n");
+////            printf("Current Quantum  -  %d\n",uthread_get_total_quantums());
+//            printf("Current Quantum  of Threac %d   is   %d\n",uthread_get_tid(),uthread_get_quantums(uthread_get_tid()));
+//        }
+////        if (w == 100000000){ // todo - block test
+////            // 2 is also synced - and by 1. released here by the main thread.
+////            uthread_terminate(thread2);
+//////            thread4 = uthread_spawn(f2);
+////            printf("added 4----------------------------------------------------------\n");
+//////            printf("id = %d\n", thread4.get);
+//////            uthread_terminate(thread1);
+//////            break;
+////        }
+////
+////        if (w == 1000000000) { // stop the program
+////            break;
+////        }
+//    }
+//    uthread_terminate(0);
+//    return 0; // exit the program - after creating the three threads - will not necessarily wait
+////    // until they finish their functions! there fore we need loop.
+//}
 
 
 

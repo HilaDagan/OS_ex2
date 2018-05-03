@@ -90,7 +90,7 @@
 		<Unit filename="/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/Thread.h">
 			<Option target="OS_ex2"/>
 		</Unit>
-		<Unit filename="/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/main.cpp">
+		<Unit filename="/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/test.cpp">
 			<Option target="OS_ex2"/>
 		</Unit>
 		<Unit filename="/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/uthreads.cpp">

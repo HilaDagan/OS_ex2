@@ -133,12 +133,12 @@ void Thread::setupEnv() {
     _sp = (address_t)_stack + STACK_SIZE - sizeof(address_t);
     if (_function != nullptr){
         _pc = (address_t)_function; //todo
-    } else { //its the main thread.
+    } else {  //its the main thread.
         _pc = 0;
     }
     sigsetjmp(_env, 1);
 
     ((_env)->__jmpbuf)[JB_SP] = translate_address(_sp);
     ((_env)->__jmpbuf)[JB_PC] = translate_address(_pc);
-    sigemptyset(&(_env)->__saved_mask); //todo
+    sigemptyset(&(_env)->__saved_mask);
 }

@@ -31,19 +31,16 @@ const static int NOT_DEPENDENT = -1;
 
 //======================= Definition of address_t =======================//
 
-
 typedef unsigned long address_t;
 #define JB_SP 6
 #define JB_PC 7
 
-
-
-
-
 // ======================= end of definition =======================//
 
 
-
+/**
+ * Represent a thread object.
+ */
 class Thread {
 public:
 

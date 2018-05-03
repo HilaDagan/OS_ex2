@@ -30,7 +30,7 @@ unistd.h
 sys/time.h
 -
 
-/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/main.cpp
+/cs/usr/dan.kovalsky/safe/OSProj/OS_ex2/test.cpp
 iostream
 -
 zconf.h

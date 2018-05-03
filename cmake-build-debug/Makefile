@@ -150,32 +150,32 @@ Thread.cpp.s:
 	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/Thread.cpp.s
 .PHONY : Thread.cpp.s
 
-main.o: main.cpp.o
+test.o: test.cpp.o
 
-.PHONY : main.o
+.PHONY : test.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/main.cpp.o
-.PHONY : main.cpp.o
+test.cpp.o:
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/test.cpp.o
+.PHONY : test.cpp.o
 
-main.i: main.cpp.i
+test.i: test.cpp.i
 
-.PHONY : main.i
+.PHONY : test.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/main.cpp.i
-.PHONY : main.cpp.i
+test.cpp.i:
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/test.cpp.i
+.PHONY : test.cpp.i
 
-main.s: main.cpp.s
+test.s: test.cpp.s
 
-.PHONY : main.s
+.PHONY : test.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/main.cpp.s
-.PHONY : main.cpp.s
+test.cpp.s:
+	$(MAKE) -f CMakeFiles/OS_ex2.dir/build.make CMakeFiles/OS_ex2.dir/test.cpp.s
+.PHONY : test.cpp.s
 
 uthreads.o: uthreads.cpp.o
 
@@ -216,9 +216,9 @@ help:
 	@echo "... Thread.o"
 	@echo "... Thread.i"
 	@echo "... Thread.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... test.o"
+	@echo "... test.i"
+	@echo "... test.s"
 	@echo "... uthreads.o"
 	@echo "... uthreads.i"
 	@echo "... uthreads.s"

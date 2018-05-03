@@ -12,7 +12,6 @@ void printQuantums();
 
 void f1(){
     printf("Current Quantum  of Threac %d   is   %d\n",uthread_get_tid(),uthread_get_quantums(uthread_get_tid()));
-
     int x = 0;
     for(;;) {
         x++;
@@ -137,6 +136,14 @@ int main() {
 //    threadHalt10(uthread_get_total_quantums());
 
     thread1 = uthread_spawn(f1);
+    waitQuantum(uthread_get_total_quantums());
+    uthread_block(thread1);
+    waitQuantum(uthread_get_total_quantums());
+    uthread_resume(thread1);
+    waitQuantum(uthread_get_total_quantums());
+
+
+    thread2 = uthread_spawn(f2);
 //    waitQuantum(uthread_get_total_quantums());
 //    printQuantums();
 

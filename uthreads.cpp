@@ -67,7 +67,7 @@ void freeMemory(int exitVal) {
 //    try {
     std::map<int, Thread *>::iterator it;
     for (it = ++threadsDic.begin(); it != threadsDic.end(); it++) {
-        printf("terminate in loop %d\n", it->first);
+//        printf("terminate in loop %d\n", it->first);
         delete it->second;
 //        threadsDic.erase(it);
     }
@@ -105,19 +105,19 @@ void sigvtalrmMask(int how) {
  * Move the next thread in the list of READY threads to RUNNING state.
  */
 void findNextThread() {
-    printf("READYLIST before swich\n");
-    std::list<int>::iterator it; // todo - print of ready
-    for (it = readyThreads.begin(); it != readyThreads.end(); ++it) {
-        std::cout << *it << std::endl;
-    }
+//    printf("READYLIST before swich\n");
+//    std::list<int>::iterator it; // todo - print of ready
+//    for (it = readyThreads.begin(); it != readyThreads.end(); ++it) {
+//        std::cout << *it << std::endl;
+//    }
 
     int nextId = readyThreads.front();
     readyThreads.pop_front();
     threadsDic[nextId]->setState(RUNNING);
     curRunningId = nextId;
     Thread *curThread = threadsDic[curRunningId];
-    printf("------------------------\n");
-    printf("cur thread %d\n", nextId);
+//    printf("------------------------\n");
+//    printf("cur thread %d\n", nextId);
 
     curThread->increasQuantums();
     if (setitimer(ITIMER_VIRTUAL, &(timer), nullptr)) {
@@ -139,7 +139,7 @@ void scheduler() {
     Thread *curThread = threadsDic[curRunningId];
     int ret_val = sigsetjmp((curThread->_env), 1); //TODO ERRORS CHECK??
 
-    printf("SWITCH: ret_val=%d\n", ret_val);
+//    printf("SWITCH: ret_val=%d\n", ret_val);
     if (ret_val != 0) {  // means that we want to restore the thread env' (and not save it).
         return;
     }
@@ -151,7 +151,7 @@ void scheduler() {
  * Handle SIGVTALRM.
  */
 void switchThreads(int sig) {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
     Thread *curThread = threadsDic[curRunningId];
 
     // Move the thread to the READY state and place it at
@@ -262,7 +262,7 @@ void removeFromDependencyList(const Thread *deadThread, const int id) {
  * Return value: On success, return 0. On failure, return -1.
 */
 int uthread_init(int quantum_usecs) {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
     if (quantum_usecs <= 0) {
         fprintf(stderr, LIB_ERR_INVALID_INPUT);
         return FAILURE;
@@ -271,7 +271,7 @@ int uthread_init(int quantum_usecs) {
     idCounter = 0;  // 0 is used by the main thread.
     curRunningId = MAIN_THREAD_ID;  // the main thread.
     int mainId = uthread_spawn(nullptr);  // create the main thread.
-    sigvtalrmMask(SIG_SETMASK);  // block again after spawn
+    sigvtalrmMask(SIG_BLOCK);  // block again after spawn
 
     threadsDic[mainId]->setState(RUNNING);
     threadsDic[mainId]->increasQuantums();
@@ -293,7 +293,7 @@ int uthread_init(int quantum_usecs) {
  * On failure, return -1.
 */
 int uthread_spawn(void (*f)(void)) {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
     int newId;
     if (threadsDic.size() == MAX_THREAD_NUM) {
         fprintf(stderr, LIB_ERR_MAX_THREAD);
@@ -334,7 +334,7 @@ int uthread_spawn(void (*f)(void)) {
  * thread is terminated, the function does not return.
 */
 int uthread_terminate(int tid) {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
     printf("terminate %d\n", tid);
 
     if (threadsDic.find(tid) == threadsDic.end()) { // no thread with ID tid exist
@@ -363,10 +363,10 @@ int uthread_terminate(int tid) {
         threadsDic.erase(tid);
 
         // print the dic:
-        printf("print dic after deletion:\n");
+//        printf("print dic after deletion:\n");
         std::map<int, Thread*>::iterator ttr;
         for (ttr = threadsDic.begin(); ttr != threadsDic.end(); ++ttr) {
-            printf("in dic: %d\n", ttr->first);
+//            printf("in dic: %d\n", ttr->first);
         }
     } catch (...) { // TODO - IS OK? ...
         fprintf(stderr, ERR_BAD_DELETE);
@@ -384,7 +384,7 @@ int uthread_terminate(int tid) {
 //    }
 
     if (tid == curRunningId) {  // a thread terminates itself
-        printf("ENTER INTO INTRESTING AREA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+//        printf("ENTER INTO INTRESTING AREA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
         sigvtalrmMask(SIG_UNBLOCK);
         findNextThread();
     }
@@ -404,7 +404,7 @@ int uthread_terminate(int tid) {
  * Return value: On success, return 0. On failure, return -1.
 */
 int uthread_block(int tid) {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
 
     // no thread with ID tid exist or trying to block the main thread:
     if ((threadsDic.find(tid) == threadsDic.end()) || (tid == MAIN_THREAD_ID)) {
@@ -445,7 +445,7 @@ int uthread_block(int tid) {
  * Return value: On success, return 0. On failure, return -1.
 */
 int uthread_resume(int tid) {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
 //    printf("resumed %d\n", tid);
 
 
@@ -477,7 +477,7 @@ int uthread_resume(int tid) {
  * Return value: On success, return 0. On failure, return -1.
 */
 int uthread_sync(int tid) {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
 
     // no thread with ID tid exist or trying to sync the main thread or a thread try to sync itself:
     if ((threadsDic.find(tid) == threadsDic.end()) || (curRunningId == MAIN_THREAD_ID)
@@ -489,7 +489,7 @@ int uthread_sync(int tid) {
     Thread *curThread = threadsDic[curRunningId];
     curThread->setState(SYNCED);  // the current state of curThread can be only RUNNING.
     curThread->setDependentIn(tid); // the current thread is dependent on tid.
-    printf("%d synced with %d\n", curRunningId, tid);
+//    printf("%d synced with %d\n", curRunningId, tid);
     threadsDic[tid]->addToDependenciesList(curRunningId); // add this thread to the list.
     scheduler();
     sigvtalrmMask(SIG_UNBLOCK);
@@ -531,7 +531,7 @@ int uthread_get_total_quantums() {
  * 			     On failure, return -1.
 */
 int uthread_get_quantums(int tid) {
-    sigvtalrmMask(SIG_SETMASK);
+    sigvtalrmMask(SIG_BLOCK);
     // no thread with ID tid exist or trying to sync the main thread:
     if ((threadsDic.find(tid) == threadsDic.end())) {
         fprintf(stderr, LIB_ERR_INVALID_INPUT);
